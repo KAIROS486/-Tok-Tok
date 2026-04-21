@@ -168,6 +168,14 @@ textarea:focus{outline:none;border-color:var(--accent);background:var(--surface)
         <button class="type-btn" id="type-uline" onclick="setType('uline')">밑줄 어법</button>
       </div>
 
+      <!-- API 키 -->
+      <div class="input-label">Claude API 키 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--text3);">(해설 자동 생성용 — 브라우저에만 저장)</span></div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." style="flex:1;height:38px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13px;font-family:monospace;background:var(--surface2);color:var(--text);outline:none;">
+        <button class="btn btn-secondary" onclick="saveApiKey()" style="height:38px;white-space:nowrap;padding:0 14px;">저장</button>
+      </div>
+      <div id="api-key-status" style="display:none;font-size:12px;margin-bottom:12px;padding:7px 12px;border-radius:6px;"></div>
+
       <!-- 파일 업로드 -->
       <div class="input-label">파일 업로드 (PDF · Word · 이미지)</div>
       <div class="upload-zone" id="drop-zone">
@@ -703,7 +711,111 @@ function inputShow(id){
     if(inputSeen.has(eid))el.classList.add('seen');else el.classList.remove('seen');
   });
   buildInputNav();updateInputCount();
-  renderPanel(document.getElementById('input-panel'),inputItems.find(i=>i.id===id),id+1,'input');
+  const item=inputItems.find(i=>i.id===id);
+  const panelEl=document.getElementById('input-panel');
+  if(apiKey && !item.aiDone){
+    item.aiDone=true;
+    fetchExplanation(panelEl,item,id+1,'input');
+  } else {
+    renderPanel(panelEl,item,id+1,'input');
+  }
+}
+
+/* ═══════ API KEY ═══════ */
+let apiKey = localStorage.getItem('kairos_api_key') || '';
+const aiCache = {};
+
+window.addEventListener('load', () => {
+  if(apiKey){
+    document.getElementById('api-key-input').value = apiKey;
+    showKeyStatus('저장된 키 사용 중', 'ok');
+  }
+});
+
+function saveApiKey(){
+  const val = document.getElementById('api-key-input').value.trim();
+  if(!val){ showKeyStatus('API 키를 입력해주세요', 'err'); return; }
+  if(!val.startsWith('sk-ant-')){ showKeyStatus('올바른 Anthropic API 키가 아닙니다 (sk-ant-로 시작)', 'err'); return; }
+  apiKey = val;
+  localStorage.setItem('kairos_api_key', val);
+  showKeyStatus('✓ 저장 완료 — 이제 괄호/밑줄 클릭 시 AI 해설이 자동 생성됩니다', 'ok');
+}
+
+function showKeyStatus(msg, type){
+  const el = document.getElementById('api-key-status');
+  el.style.display = 'block';
+  el.style.background = type==='ok' ? 'var(--green-bg)' : 'var(--red-bg)';
+  el.style.color = type==='ok' ? 'var(--green-text)' : 'var(--red-text)';
+  el.style.border = '1px solid ' + (type==='ok' ? 'var(--green-border)' : 'var(--red-border)');
+  el.textContent = msg;
+}
+
+/* ═══════ AI 해설 생성 ═══════ */
+async function fetchExplanation(panelEl, item, num, ctx){
+  const cacheKey = item.opts + '||' + item.answer + '||' + (item.word||'');
+  if(aiCache[cacheKey]){
+    const cached = aiCache[cacheKey];
+    item.reason = cached.reason;
+    item.wrongReason = cached.wrongReason;
+    item.rule = cached.rule;
+    renderPanel(panelEl, item, num, ctx);
+    return;
+  }
+
+  /* 로딩 상태 */
+  panelEl.innerHTML = `
+    <div class="panel-header">
+      <span class="panel-num"># ${num}</span>
+      <span class="panel-type">${item.type||''}</span>
+    </div>
+    <div class="answer-row">
+      <span class="answer-chip">✓ ${item.answer}</span>
+      ${item.wrong ? `<span class="wrong-chip">${item.wrong}</span>` : ''}
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;padding:16px 0;color:var(--text2);font-size:14px;">
+      <div class="spinner"></div><span>AI 해설 생성 중...</span>
+    </div>`;
+
+  try {
+    const isUline = !!item.word;
+    const prompt = isUline
+      ? `영어 어법 문제입니다. 밑줄 친 부분: "${item.word}", 정오: ${item.isCorrect ? '맞음(올바른 표현)' : '틀림(잘못된 표현)'}.
+문맥: "${document.getElementById('input-text').value.substring(0,300)}"`
+      : `영어 어법 괄호 선택 문제입니다. 선택지: (${item.opts}), 정답: ${item.answer}, 오답: ${item.wrong}.
+지문 문맥: "${document.getElementById('input-text').value.substring(0,300)}"`;
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: `당신은 한국 수능 영어 전문 선생님입니다. 어법 문제 해설을 정확하고 간결하게 작성합니다.
+반드시 아래 JSON 형식만 출력하세요 (다른 텍스트 없이):
+{"reason":"정답 선택 이유 (2-3문장, 핵심 문법 규칙+이 문장 적용 이유)","wrongReason":"오답 분석 (1-2문장, 오답이 틀린 정확한 이유)","rule":"핵심 규칙 (수능 출제 포인트 한 문장)"}
+HTML 태그 사용 가능: <b>, <span class='tag-ok'>, <span class='tag-no'>, <span class='tag-rule'>`,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message);
+
+    const raw = data.content?.[0]?.text || '{}';
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+
+    item.reason = parsed.reason || item.reason;
+    item.wrongReason = parsed.wrongReason || item.wrongReason;
+    item.rule = parsed.rule || item.rule;
+    aiCache[cacheKey] = { reason: item.reason, wrongReason: item.wrongReason, rule: item.rule };
+
+  } catch(e) {
+    item.reason = item.reason || `<span class="tag-ok">${item.answer}</span>이 이 문맥에서 적절합니다.`;
+    item.wrongReason = item.wrongReason || '오답 분석을 불러올 수 없습니다.';
+    item.rule = item.rule || `정답: <span class="tag-rule">${item.answer}</span>`;
+  }
+  renderPanel(panelEl, item, num, ctx);
 }
 
 /* ═══════ SAMPLES ═══════ */
