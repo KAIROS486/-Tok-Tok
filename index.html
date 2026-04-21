@@ -5,232 +5,190 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>카이로스 어법 해설 앱</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #f5f4f0;
-  --surface: #ffffff;
-  --surface2: #f0efe9;
-  --border: #e0ddd5;
-  --text: #1a1a18;
-  --text2: #5a5a54;
-  --text3: #9a9a90;
-  --green-bg: #eaf3de; --green-text: #2e6b12; --green-border: #b8d990;
-  --blue-bg: #e4eef8; --blue-text: #0c4070; --blue-border: #a8c8ec;
-  --purple-bg: #eeedfc; --purple-text: #3a2f8a; --purple-border: #c4bcf0;
-  --red-bg: #fceaea; --red-text: #8a2020; --red-border: #f0b0b0;
-  --amber-bg: #fef4e0; --amber-text: #7a4800; --amber-border: #f0c870;
-  --accent: #3a50d0;
-  --radius: 10px;
-  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#f0efe9;--border:#e0ddd5;
+  --text:#1a1a18;--text2:#5a5a54;--text3:#9a9a90;
+  --green-bg:#eaf3de;--green-text:#2e6b12;--green-border:#b8d990;
+  --blue-bg:#e4eef8;--blue-text:#0c4070;--blue-border:#a8c8ec;
+  --purple-bg:#eeedfc;--purple-text:#3a2f8a;--purple-border:#c4bcf0;
+  --red-bg:#fceaea;--red-text:#8a2020;--red-border:#f0b0b0;
+  --amber-bg:#fef4e0;--amber-text:#7a4800;--amber-border:#f0c870;
+  --accent:#3a50d0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);
 }
-body { font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; }
-
-header {
-  background: var(--surface); border-bottom: 1px solid var(--border);
-  padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
-  height: 56px; position: sticky; top: 0; z-index: 100;
-}
-.logo { display: flex; align-items: center; gap: 10px; }
-.logo-icon { width: 32px; height: 32px; background: #1a1a18; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-.logo-text { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
-.logo-sub { font-size: 11px; color: var(--text3); }
-.header-tabs { display: flex; gap: 4px; }
-.tab-btn { padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 13px; cursor: pointer; transition: all 0.15s; font-family: inherit; }
-.tab-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
-.tab-btn:hover:not(.active) { background: var(--surface2); }
-
-.container { display: grid; grid-template-columns: 1fr 390px; gap: 20px; max-width: 1220px; margin: 0 auto; padding: 20px 24px; }
-@media (max-width: 920px) { .container { grid-template-columns: 1fr; } }
-
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; box-shadow: var(--shadow); }
-.card-title { font-size: 13px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
-
-/* ── PASSAGE ── */
-.passage { line-height: 2.2; font-size: 15px; color: var(--text); word-break: break-word; }
-
-/* ── BRACKET with number ── */
-.bracket-wrap { display: inline-block; position: relative; margin: 0 1px; }
-.bracket-num {
-  position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-  font-size: 9px; font-weight: 700; color: var(--accent);
-  background: var(--surface); border: 1px solid var(--blue-border);
-  border-radius: 10px; padding: 0 4px; line-height: 14px;
-  white-space: nowrap; pointer-events: none;
-}
-.bracket {
-  display: inline-block; background: var(--blue-bg); color: var(--blue-text);
-  border: 1px solid var(--blue-border); border-radius: 5px;
-  padding: 2px 7px; font-size: 13px; cursor: pointer;
-  transition: all 0.12s; white-space: nowrap; font-weight: 500; margin-top: 8px;
-}
-.bracket:hover { background: var(--blue-border); }
-.bracket.seen { background: var(--green-bg); color: var(--green-text); border-color: var(--green-border); }
-.bracket.seen ~ .bracket-num { color: var(--green-text); border-color: var(--green-border); }
-.bracket.active { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple-border); outline: 2px solid #7060cc; outline-offset: 1px; }
-.bracket.active ~ .bracket-num { color: var(--purple-text); border-color: var(--purple-border); background: var(--purple-bg); }
-
-/* ── UNDERLINE ── */
-.uline {
-  display: inline; border-bottom: 2.5px solid #e05030; color: var(--text);
-  cursor: pointer; padding-bottom: 1px; transition: all 0.12s; position: relative;
-}
-.uline:hover { background: #fff0ec; border-radius: 2px; }
-.uline.seen { border-bottom-color: var(--green-text); }
-.uline.active { border-bottom-color: var(--purple-text); background: var(--purple-bg); border-radius: 2px; }
-.uline-num { font-size: 10px; color: #e05030; font-weight: 700; vertical-align: super; margin-left: 1px; pointer-events: none; }
-.uline.seen .uline-num { color: var(--green-text); }
-.uline.active .uline-num { color: var(--purple-text); }
-
-/* ── PROGRESS ── */
-.progress-wrap { margin-bottom: 14px; }
-.progress-info { display: flex; justify-content: space-between; margin-bottom: 6px; }
-.progress-label { font-size: 12px; color: var(--text3); }
-.progress-count { font-size: 13px; font-weight: 600; color: var(--accent); }
-.progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.35s; }
-
-/* ── NAV ── */
-.nav-grid { display: flex; flex-wrap: wrap; gap: 5px; }
-.nav-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.12s; font-family: inherit; font-weight: 500; }
-.nav-btn:hover { background: var(--surface2); }
-.nav-btn.done { background: var(--green-bg); color: var(--green-text); border-color: var(--green-border); }
-.nav-btn.cur { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple-border); }
-
-/* ── PANEL ── */
-.panel-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; color: var(--text3); font-size: 14px; gap: 10px; }
-.panel-empty-icon { font-size: 32px; opacity: 0.35; }
-.panel-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-.panel-num { background: var(--text); color: #fff; border-radius: 6px; padding: 3px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
-.panel-type { font-size: 13px; color: var(--text2); line-height: 1.5; }
-.answer-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-.answer-chip { background: var(--green-bg); color: var(--green-text); border: 1px solid var(--green-border); border-radius: 20px; padding: 5px 16px; font-size: 14px; font-weight: 600; }
-.wrong-chip { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red-border); border-radius: 20px; padding: 5px 16px; font-size: 14px; font-weight: 600; text-decoration: line-through; }
-.section-lbl { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.07em; text-transform: uppercase; margin: 14px 0 5px; }
-.expl { font-size: 14px; line-height: 1.85; color: var(--text); }
-.tag-ok { background: var(--green-bg); color: var(--green-text); border-radius: 3px; padding: 1px 5px; font-weight: 600; font-size: 13px; }
-.tag-no { background: var(--red-bg); color: var(--red-text); border-radius: 3px; padding: 1px 5px; text-decoration: line-through; font-size: 13px; }
-.tag-rule { background: var(--purple-bg); color: var(--purple-text); border-radius: 3px; padding: 1px 5px; font-weight: 600; font-size: 13px; }
-
-/* ── DOWNLOAD BTN in panel ── */
-.dl-btn { display: flex; align-items: center; gap: 6px; margin-top: 16px; padding: 9px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text2); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; width: 100%; justify-content: center; transition: all 0.13s; }
-.dl-btn:hover { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); }
-.dl-all-btn { background: var(--text); color: #fff; border-color: var(--text); margin-top: 8px; }
-.dl-all-btn:hover { background: #333; }
-
-/* ── INPUT ── */
-.input-section { margin-bottom: 16px; }
-.input-label { font-size: 12px; font-weight: 600; color: var(--text3); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-textarea { width: 100%; border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; font-size: 14px; line-height: 1.7; resize: vertical; min-height: 120px; font-family: inherit; background: var(--surface2); color: var(--text); transition: border-color 0.15s; }
-textarea:focus { outline: none; border-color: var(--accent); background: var(--surface); }
-.hint-box { background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--amber-text); margin-bottom: 12px; line-height: 1.7; }
-.hint-box code { background: #fff; border-radius: 3px; padding: 1px 5px; font-size: 12px; font-family: monospace; }
-.btn-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-.btn { padding: 9px 16px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.13s; }
-.btn-primary { background: var(--text); color: #fff; border-color: var(--text); }
-.btn-primary:hover { background: #333; }
-.btn-secondary { background: transparent; color: var(--text2); }
-.btn-secondary:hover { background: var(--surface2); }
-.btn-danger { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
-
-.type-toggle { display: flex; gap: 8px; margin-bottom: 14px; }
-.type-btn { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; background: transparent; color: var(--text2); transition: all 0.13s; text-align: center; }
-.type-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
-
-.demo-notice { background: var(--blue-bg); border: 1px solid var(--blue-border); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--blue-text); margin-bottom: 14px; }
-
-.page { display: none; }
-.page.active { display: block; }
-
-/* ── PRINT / PDF STYLES ── */
-@media print {
-  header, .btn-row,
-  .dl-btn, .dl-all-btn, .nav-grid, .progress-wrap, .type-toggle,
-  .hint-box { display: none !important; }
-  body { background: #fff; font-size: 13px; }
-  .container { grid-template-columns: 1fr; padding: 0; gap: 12px; }
-  .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
-  .bracket { border: 1px solid #888; background: #f0f0f0 !important; color: #000 !important; }
-  .panel-empty { display: none; }
+body{font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:32px;height:32px;background:#1a1a18;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.logo-text{font-size:15px;font-weight:700;letter-spacing:-.3px;}
+.logo-sub{font-size:11px;color:var(--text3);}
+.header-tabs{display:flex;gap:4px;}
+.tab-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:13px;cursor:pointer;transition:all .15s;font-family:inherit;}
+.tab-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
+.tab-btn:hover:not(.active){background:var(--surface2);}
+.container{display:grid;grid-template-columns:1fr 390px;gap:20px;max-width:1220px;margin:0 auto;padding:20px 24px;}
+@media(max-width:920px){.container{grid-template-columns:1fr;}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow);}
+.card-title{font-size:13px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;}
+.passage{line-height:2.3;font-size:15px;color:var(--text);word-break:break-word;}
+/* bracket */
+.bracket-wrap{display:inline-block;position:relative;margin:0 1px;}
+.bracket-num{position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:700;color:var(--accent);background:var(--surface);border:1px solid var(--blue-border);border-radius:10px;padding:0 4px;line-height:14px;white-space:nowrap;pointer-events:none;}
+.bracket{display:inline-block;background:var(--blue-bg);color:var(--blue-text);border:1px solid var(--blue-border);border-radius:5px;padding:2px 7px;font-size:13px;cursor:pointer;transition:all .12s;white-space:nowrap;font-weight:500;margin-top:9px;}
+.bracket:hover{background:var(--blue-border);}
+.bracket.seen{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);}
+.bracket.seen~.bracket-num{color:var(--green-text);border-color:var(--green-border);}
+.bracket.active{background:var(--purple-bg);color:var(--purple-text);border-color:var(--purple-border);outline:2px solid #7060cc;outline-offset:1px;}
+.bracket.active~.bracket-num{color:var(--purple-text);border-color:var(--purple-border);background:var(--purple-bg);}
+/* underline */
+.uline{display:inline;border-bottom:2.5px solid #e05030;color:var(--text);cursor:pointer;padding-bottom:1px;transition:all .12s;}
+.uline:hover{background:#fff0ec;border-radius:2px;}
+.uline.seen{border-bottom-color:var(--green-text);}
+.uline.active{border-bottom-color:var(--purple-text);background:var(--purple-bg);border-radius:2px;}
+.uline-num{font-size:10px;color:#e05030;font-weight:700;vertical-align:super;margin-left:1px;pointer-events:none;}
+.uline.seen .uline-num{color:var(--green-text);}
+.uline.active .uline-num{color:var(--purple-text);}
+/* progress */
+.progress-wrap{margin-bottom:14px;}
+.progress-info{display:flex;justify-content:space-between;margin-bottom:6px;}
+.progress-label{font-size:12px;color:var(--text3);}
+.progress-count{font-size:13px;font-weight:600;color:var(--accent);}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .35s;}
+/* nav */
+.nav-grid{display:flex;flex-wrap:wrap;gap:5px;}
+.nav-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;font-family:inherit;font-weight:500;}
+.nav-btn:hover{background:var(--surface2);}
+.nav-btn.done{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);}
+.nav-btn.cur{background:var(--purple-bg);color:var(--purple-text);border-color:var(--purple-border);}
+/* panel */
+.panel-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;color:var(--text3);font-size:14px;gap:10px;}
+.panel-empty-icon{font-size:32px;opacity:.35;}
+.panel-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.panel-num{background:var(--text);color:#fff;border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;white-space:nowrap;}
+.panel-type{font-size:13px;color:var(--text2);line-height:1.5;}
+.answer-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.answer-chip{background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);border-radius:20px;padding:5px 16px;font-size:14px;font-weight:600;}
+.wrong-chip{background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border);border-radius:20px;padding:5px 16px;font-size:14px;font-weight:600;text-decoration:line-through;}
+.section-lbl{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;margin:14px 0 5px;}
+.expl{font-size:14px;line-height:1.9;color:var(--text);}
+.tag-ok{background:var(--green-bg);color:var(--green-text);border-radius:3px;padding:1px 5px;font-weight:600;font-size:13px;}
+.tag-no{background:var(--red-bg);color:var(--red-text);border-radius:3px;padding:1px 5px;text-decoration:line-through;font-size:13px;}
+.tag-rule{background:var(--purple-bg);color:var(--purple-text);border-radius:3px;padding:1px 5px;font-weight:600;font-size:13px;}
+/* download */
+.dl-btn{display:flex;align-items:center;gap:6px;margin-top:12px;padding:9px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;width:100%;justify-content:center;transition:all .13s;}
+.dl-btn:hover{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue-border);}
+.dl-all-btn{background:var(--text);color:#fff;border-color:var(--text);margin-top:6px;}
+.dl-all-btn:hover{background:#333;}
+/* input */
+.input-section{margin-bottom:16px;}
+.input-label{font-size:12px;font-weight:600;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
+textarea{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-size:14px;line-height:1.7;resize:vertical;min-height:130px;font-family:inherit;background:var(--surface2);color:var(--text);transition:border-color .15s;}
+textarea:focus{outline:none;border-color:var(--accent);background:var(--surface);}
+.hint-box{background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--amber-text);margin-bottom:12px;line-height:1.7;}
+.hint-box code{background:#fff;border-radius:3px;padding:1px 5px;font-size:12px;font-family:monospace;}
+.btn-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.btn{padding:9px 16px;border-radius:8px;border:1px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .13s;}
+.btn-primary{background:var(--text);color:#fff;border-color:var(--text);}
+.btn-primary:hover{background:#333;}
+.btn-secondary{background:transparent;color:var(--text2);}
+.btn-secondary:hover{background:var(--surface2);}
+/* upload */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:18px;text-align:center;cursor:pointer;transition:all .15s;background:var(--surface2);margin-bottom:12px;position:relative;}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--accent);background:var(--blue-bg);}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:26px;margin-bottom:5px;}
+.upload-text{font-size:13px;color:var(--text2);line-height:1.6;}
+.upload-sub{font-size:11px;color:var(--text3);margin-top:3px;}
+.upload-status{display:none;align-items:center;gap:8px;padding:9px 12px;background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:8px;margin-bottom:10px;font-size:13px;color:var(--blue-text);}
+.upload-status.show{display:flex;}
+.spinner{width:15px;height:15px;border:2px solid var(--blue-border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.upload-ok{display:none;align-items:center;gap:8px;padding:9px 12px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:8px;margin-bottom:10px;font-size:13px;color:var(--green-text);}
+.upload-ok.show{display:flex;}
+/* type toggle */
+.type-toggle{display:flex;gap:8px;margin-bottom:14px;}
+.type-btn{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;background:transparent;color:var(--text2);transition:all .13s;text-align:center;}
+.type-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
+.demo-notice{background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--blue-text);margin-bottom:14px;}
+.page{display:none;}.page.active{display:block;}
+@media print{
+  header,.btn-row,.upload-zone,.upload-status,.upload-ok,.dl-btn,.dl-all-btn,.nav-grid,.progress-wrap,.type-toggle,.hint-box{display:none!important;}
+  body{background:#fff;font-size:13px;}
+  .container{grid-template-columns:1fr;padding:0;gap:12px;}
+  .card{box-shadow:none;border:1px solid #ddd;page-break-inside:avoid;}
+  .bracket{border:1px solid #888;background:#f0f0f0!important;color:#000!important;}
+  .panel-empty{display:none;}
 }
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">
     <div class="logo-icon">📚</div>
-    <div>
-      <div class="logo-text">카이로스 어법 해설</div>
-      <div class="logo-sub">KAIROS ENGLISH</div>
-    </div>
+    <div><div class="logo-text">카이로스 어법 해설</div><div class="logo-sub">KAIROS ENGLISH</div></div>
   </div>
   <div class="header-tabs">
-    <button class="tab-btn active" onclick="switchPage('demo', this)">예제 문제</button>
-    <button class="tab-btn" onclick="switchPage('input', this)">직접 입력</button>
+    <button class="tab-btn active" onclick="switchPage('demo',this)">예제 문제</button>
+    <button class="tab-btn" onclick="switchPage('input',this)">직접 입력</button>
   </div>
 </header>
 
-<!-- ══════════════════════════════════════════════════
-     PAGE: DEMO
-══════════════════════════════════════════════════ -->
+<!-- DEMO PAGE -->
 <div class="page active" id="page-demo">
 <div class="container">
   <div>
     <div class="card">
-      <div class="card-title">01강 — 01 어법 선택 (괄호 클릭 → 해설)</div>
-      <div class="demo-notice">번호가 붙은 파란 박스를 클릭하면 오른쪽에 해설이 나타납니다.</div>
+      <div class="card-title">01강 — 01 어법 선택</div>
+      <div class="demo-notice">번호 붙은 파란 박스를 클릭하면 오른쪽에 해설이 나타납니다.</div>
       <div class="passage" id="demo-passage"></div>
     </div>
   </div>
   <div style="position:sticky;top:76px;align-self:start;">
     <div class="card" style="margin-bottom:16px;">
       <div class="progress-wrap">
-        <div class="progress-info">
-          <span class="progress-label">학습 진도</span>
-          <span class="progress-count" id="demo-count">0 / 23</span>
-        </div>
+        <div class="progress-info"><span class="progress-label">학습 진도</span><span class="progress-count" id="demo-count">0 / 23</span></div>
         <div class="progress-bar"><div class="progress-fill" id="demo-prog" style="width:0%"></div></div>
       </div>
       <div class="nav-grid" id="demo-nav"></div>
     </div>
-    <div class="card" id="demo-panel">
-      <div class="panel-empty"><div class="panel-empty-icon">☝</div><span>괄호를 클릭하세요</span></div>
-    </div>
+    <div class="card" id="demo-panel"><div class="panel-empty"><div class="panel-empty-icon">☝</div><span>괄호를 클릭하세요</span></div></div>
   </div>
 </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════
-     PAGE: INPUT
-══════════════════════════════════════════════════ -->
+<!-- INPUT PAGE -->
 <div class="page" id="page-input">
 <div class="container">
-  <!-- LEFT -->
   <div>
     <div class="card">
       <div class="card-title">문제 입력</div>
-
       <div class="type-toggle">
         <button class="type-btn active" id="type-bracket" onclick="setType('bracket')">괄호 어법</button>
         <button class="type-btn" id="type-uline" onclick="setType('uline')">밑줄 어법</button>
       </div>
 
-      <!-- 직접 입력 -->
-      <div id="hint-bracket" class="hint-box">
-        괄호 선택지를 <code>(A / B)</code> 형식으로 입력하세요.<br>
-        예: <code>She (was / were) happy that he (what / that) said.</code>
+      <!-- 파일 업로드 -->
+      <div class="input-label">파일 업로드 (PDF · Word · 이미지)</div>
+      <div class="upload-zone" id="drop-zone">
+        <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt,image/*" onchange="handleFile(this.files[0])">
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">PDF · Word · 이미지 · TXT 파일을 드래그하거나 클릭</div>
+        <div class="upload-sub">파일에서 텍스트를 자동 추출합니다</div>
       </div>
-      <div id="hint-uline" class="hint-box" style="display:none;">
-        밑줄 칠 부분을 <code>[단어/구]</code>로 표시하세요.<br>
-        예: <code>She [was] happy. He [quick] solved the problem.</code>
-      </div>
+      <div class="upload-status" id="upload-status"><div class="spinner"></div><span id="upload-status-text">파일 처리 중...</span></div>
+      <div class="upload-ok" id="upload-ok">✓ <span id="upload-ok-text">텍스트 추출 완료 — 아래에서 확인·수정 후 해설 생성을 누르세요</span></div>
+
+      <!-- 텍스트 입력 -->
+      <div id="hint-bracket" class="hint-box">괄호 선택지를 <code>(A / B)</code> 형식으로 입력하세요.<br>예: <code>She (was / were) happy that he (what / that) said.</code></div>
+      <div id="hint-uline" class="hint-box" style="display:none;">밑줄 칠 부분을 <code>[단어/구]</code>로 표시하세요.<br>예: <code>She [was] happy. He [quick] solved the problem.</code></div>
       <div class="input-section">
-        <div class="input-label">지문</div>
-        <textarea id="input-text" placeholder="지문을 여기에 입력하세요..."></textarea>
+        <div class="input-label">지문 <span style="font-weight:400;text-transform:none;letter-spacing:0;">(파일 업로드 시 자동 입력됩니다)</span></div>
+        <textarea id="input-text" placeholder="지문을 여기에 입력하거나 위에서 파일을 업로드하세요..."></textarea>
       </div>
 
       <!-- 밑줄 정오 -->
-      <div id="uline-answers-section" style="display:none; margin-bottom:14px;">
+      <div id="uline-answers-section" style="display:none;margin-bottom:14px;">
         <div class="input-label">각 항목 정오 여부</div>
         <div id="uline-answers-list"></div>
       </div>
@@ -242,208 +200,224 @@ textarea:focus { outline: none; border-color: var(--accent); background: var(--s
       </div>
     </div>
   </div>
-
-  <!-- RIGHT -->
   <div style="position:sticky;top:76px;align-self:start;">
-    <div class="card" style="margin-bottom:16px; display:none;" id="input-nav-card">
+    <div class="card" style="margin-bottom:16px;display:none;" id="input-nav-card">
       <div class="progress-wrap">
-        <div class="progress-info">
-          <span class="progress-label">학습 진도</span>
-          <span class="progress-count" id="input-count">0 / 0</span>
-        </div>
+        <div class="progress-info"><span class="progress-label">학습 진도</span><span class="progress-count" id="input-count">0 / 0</span></div>
         <div class="progress-bar"><div class="progress-fill" id="input-prog" style="width:0%"></div></div>
       </div>
       <div class="nav-grid" id="input-nav"></div>
     </div>
-    <div class="card" style="display:none; margin-bottom:16px;" id="input-passage-card">
+    <div class="card" style="display:none;margin-bottom:16px;" id="input-passage-card">
       <div class="card-title">생성된 지문</div>
       <div class="passage" id="input-passage-display"></div>
     </div>
-    <div class="card" id="input-panel">
-      <div class="panel-empty"><div class="panel-empty-icon">✏️</div><span>지문을 입력하고 해설 생성을 누르세요</span></div>
-    </div>
+    <div class="card" id="input-panel"><div class="panel-empty"><div class="panel-empty-icon">✏️</div><span>지문을 입력하고 해설 생성을 누르세요</span></div></div>
   </div>
 </div>
 </div>
 
+<!-- PDF.js, mammoth, Tesseract -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
 <script>
-/* ═══════════ DEMO DATA ═══════════ */
-const bracketItems = [
-  { id:0, opts:"what / that", answer:"that", wrong:"what", type:"접속사 that vs. 관계대명사 what",
-    reason:"observed의 목적어절을 이끄는 접속사가 필요합니다. <span class='tag-ok'>that</span>은 완전한 절(주어+동사 모두 있음)을 이끄는 명사절 접속사입니다.",
-    wrongReason:"<span class='tag-no'>what</span>은 불완전한 절을 이끄는 관계대명사인데, 이 절은 완전합니다.",
-    rule:"<span class='tag-rule'>that절 = 완전한 절</span> / <span class='tag-rule'>what절 = 불완전한 절</span>" },
-  { id:1, opts:"regardless of / depending on", answer:"regardless of", wrong:"depending on", type:"전치사구 의미",
-    reason:"'미국의 기회와 상관없이 자연재해가 사람들을 밀어냈다'는 의미. <span class='tag-ok'>regardless of</span>는 '~에 관계없이'로 적절합니다.",
-    wrongReason:"<span class='tag-no'>depending on</span>(~에 따라)은 인과 관계를 나타내어 문맥과 반대됩니다.",
-    rule:"<span class='tag-rule'>regardless of</span> = 무관 / <span class='tag-rule'>depending on</span> = 인과" },
-  { id:2, opts:"pushed / pushing", answer:"pushed", wrong:"pushing", type:"본동사 vs. 분사",
-    reason:"주어 natural disasters의 <span class='tag-ok'>본동사(과거형)</span>가 필요합니다. pushed가 주절의 서술어입니다.",
-    wrongReason:"<span class='tag-no'>pushing</span>은 현재분사로 단독으로 서술어가 될 수 없어 문장이 성립하지 않습니다.",
-    rule:"<span class='tag-rule'>분사(-ing)는 단독 서술어 불가</span> — 본동사 필수" },
-  { id:3, opts:"other / another", answer:"other", wrong:"another", type:"other vs. another",
-    reason:"수식 대상이 복수명사 opportunities이므로 <span class='tag-ok'>other</span>를 씁니다.",
-    wrongReason:"<span class='tag-no'>another</span>는 단수 가산명사 앞에만 사용합니다. (an + other)",
-    rule:"<span class='tag-rule'>another + 단수</span> vs. <span class='tag-rule'>other + 복수/불가산</span>" },
-  { id:4, opts:"what / that", answer:"that", wrong:"what", type:"동격절 접속사 that",
-    reason:"'with the result ___'는 동격절 구조로, <span class='tag-ok'>that</span>이 result의 내용을 설명합니다.",
-    wrongReason:"<span class='tag-no'>what</span>은 불완전한 절을 이끄는데, 이 절은 완전합니다.",
-    rule:"<span class='tag-rule'>with the result that</span> = 동격 구문 (완전절)" },
-  { id:5, opts:"disconnections / connections", answer:"connections", wrong:"disconnections", type:"문맥 어휘",
-    reason:"이민자들이 미국에서 취업을 도와줄 수 있다는 문맥에서 <span class='tag-ok'>connections</span>(인맥)이 적절합니다.",
-    wrongReason:"<span class='tag-no'>disconnections</span>(단절)은 이민자들이 서로 돕는다는 내용과 반대입니다.",
-    rule:"글 마지막 'Network connections matter'와 <span class='tag-rule'>주제 일관성</span> 확인" },
-  { id:6, opts:"which / who", answer:"who", wrong:"which", type:"관계대명사 사람 vs. 사물",
-    reason:"선행사 connections는 실질적으로 '사람들'을 가리킵니다. 사람 선행사에는 <span class='tag-ok'>who</span>를 씁니다.",
-    wrongReason:"<span class='tag-no'>which</span>는 사물·동물 선행사에 씁니다.",
-    rule:"<span class='tag-rule'>사람 → who/whom</span> / 사물 → which" },
-  { id:7, opts:"were / was", answer:"were", wrong:"was", type:"관계대명사절 수 일치",
-    reason:"선행사 connections(복수)에 맞게 동사도 복수형 <span class='tag-ok'>were</span>입니다.",
-    wrongReason:"<span class='tag-no'>was</span>는 단수 동사로 복수 선행사와 수 일치 불가.",
-    rule:"<span class='tag-rule'>관계대명사절 동사의 수 = 선행사의 수</span>" },
-  { id:8, opts:"employed / emplying", answer:"employed", wrong:"emplying", type:"be+p.p. 구조",
-    reason:"were 뒤에서 '취업된 상태'를 나타내는 과거분사 <span class='tag-ok'>employed</span>가 적절합니다.",
-    wrongReason:"<span class='tag-no'>emplying</span>은 철자 자체가 오기(employing의 잘못된 표기)입니다.",
-    rule:"<span class='tag-rule'>be + p.p.</span> = 상태/수동 / be + -ing = 진행" },
-  { id:9, opts:"finding / found / find", answer:"find", wrong:"finding/found", type:"help + O + 원형부정사",
-    reason:"'help + 목적어 + 동사원형' 구문에서 <span class='tag-ok'>find</span>(원형)가 적절합니다.",
-    wrongReason:"<span class='tag-no'>finding</span>은 지각동사 구문에, <span class='tag-no'>found</span>는 서술어로 쓰입니다.",
-    rule:"<span class='tag-rule'>help + O + 원형 / to-V</span> (원형이 더 자연스러움)" },
-  { id:10, opts:"what / that", answer:"that", wrong:"what", type:"명사절 접속사 that",
-    reason:"predicted의 목적어절을 이끄는 접속사. 뒤 절이 완전하므로 <span class='tag-ok'>that</span>이 적절합니다.",
-    wrongReason:"<span class='tag-no'>what</span>은 불완전한 절을 이끌어야 합니다.",
-    rule:"<span class='tag-rule'>동사 + that + 완전절</span>" },
-  { id:11, opts:"compared / was compared", answer:"compared", wrong:"was compared", type:"능동 vs. 수동",
-    reason:"주어 one이 직접 비교하는 능동 구조. <span class='tag-ok'>compared</span>(능동태 과거)가 맞습니다.",
-    wrongReason:"<span class='tag-no'>was compared</span>는 수동태로 '비교를 당했다'는 뜻이 됩니다.",
-    rule:"<span class='tag-rule'>능동/수동 판단</span>: 주어가 행위를 하면 능동" },
-  { id:12, opts:"has had / had had", answer:"had had", wrong:"has had", type:"과거완료",
-    reason:"과거 특정 시점보다 더 이전의 사건이므로 과거완료 <span class='tag-ok'>had had</span>가 필요합니다.",
-    wrongReason:"<span class='tag-no'>has had</span>는 현재완료로 현재와의 연관성을 나타내어 과거 맥락에 부적절합니다.",
-    rule:"<span class='tag-rule'>과거완료(had+p.p.)</span> = 과거 기준시점보다 앞선 사건" },
-  { id:13, opts:"emigrating / to emigrate", answer:"to emigrate", wrong:"emigrating", type:"cause + O + to-V",
-    reason:"'cause + 목적어 + to부정사' 구문에서 <span class='tag-ok'>to emigrate</span>가 목적격 보어입니다.",
-    wrongReason:"<span class='tag-no'>emigrating</span>(현재분사)은 지각동사 구문에 쓰입니다. cause는 반드시 to부정사를 취합니다.",
-    rule:"<span class='tag-rule'>cause / force / allow + O + to-V</span>" },
-  { id:14, opts:"another / the others / the other", answer:"the other", wrong:"another/the others", type:"one ~ the other",
-    reason:"two villages 중 하나(one)와 나머지 하나를 대응시키므로 <span class='tag-ok'>the other</span>입니다.",
-    wrongReason:"<span class='tag-no'>another</span>는 셋 이상 불특정 하나, <span class='tag-no'>the others</span>는 셋 이상 나머지 전부입니다.",
-    rule:"<span class='tag-rule'>둘: one ~ the other</span> / 셋 이상: one ~ another ~ the other(s)" },
-  { id:15, opts:"had / did", answer:"did", wrong:"had", type:"대동사 do",
-    reason:"앞 절 전체를 대신하는 대동사 <span class='tag-ok'>did</span>가 자연스럽습니다.",
-    wrongReason:"<span class='tag-no'>had</span>를 그대로 쓰면 'had had had not'처럼 어색한 구조가 됩니다.",
-    rule:"<span class='tag-rule'>대동사 do/does/did</span>로 앞 내용 전체를 대신함" },
-  { id:16, opts:"it / that", answer:"it", wrong:"that", type:"가주어 it",
-    reason:"'___ would be easier for a resident to find'에서 진주어(to find a job)의 자리를 채우는 가주어 <span class='tag-ok'>it</span>이 필요합니다.",
-    wrongReason:"<span class='tag-no'>that</span>은 접속사나 지시대명사로 가주어 역할 불가.",
-    rule:"<span class='tag-rule'>가주어 it ~ 진주어 to-V / that절</span>" },
-  { id:17, opts:"for / of", answer:"for", wrong:"of", type:"to부정사 의미상 주어",
-    reason:"to부정사의 의미상 주어는 <span class='tag-ok'>for + 목적격</span>으로 표시합니다.",
-    wrongReason:"<span class='tag-no'>of</span>는 kind, wise, foolish 등 성품 형용사 뒤에서만 씁니다.",
-    rule:"<span class='tag-rule'>to부정사 의미상 주어: for+목적격</span> (성품형용사 → of)" },
-  { id:18, opts:"to find / find / found", answer:"to find", wrong:"find/found", type:"가주어 구문 진주어",
-    reason:"'it is easier for a resident ___'에서 진주어 역할을 하는 <span class='tag-ok'>to find</span>가 필요합니다.",
-    wrongReason:"<span class='tag-no'>find</span>(원형)는 가주어 it 구문의 진주어로 단독 불가. <span class='tag-no'>found</span>는 서술어로 기능해 구조가 깨집니다.",
-    rule:"<span class='tag-rule'>가주어 it + 형용사 + for + O + to-V</span>" },
-  { id:19, opts:"for the resident / the resident", answer:"for the resident", wrong:"the resident", type:"비교 구문 병렬",
-    reason:"앞의 'for a resident'와 병렬 구조를 맞춰야 하므로 <span class='tag-ok'>for the resident</span>로 받아야 합니다.",
-    wrongReason:"<span class='tag-no'>the resident</span>만 쓰면 앞의 'for a resident'와 문법 구조가 달라 병렬성이 깨집니다.",
-    rule:"<span class='tag-rule'>비교 구문 병렬</span>: than 앞뒤 비교 대상은 동일한 문법 구조" },
-  { id:20, opts:"seeing / to see", answer:"to see", wrong:"seeing", type:"expect + to-V",
-    reason:"expect는 to부정사를 목적어로 취하는 동사입니다. <span class='tag-ok'>to see</span>가 올바릅니다.",
-    wrongReason:"<span class='tag-no'>seeing</span>(동명사)은 enjoy, mind, avoid 등 뒤에 씁니다. expect는 동명사 불가.",
-    rule:"<span class='tag-rule'>expect / want / hope / plan + to-V</span>" },
-  { id:21, opts:"that / what", answer:"what", wrong:"that", type:"관계대명사 what",
-    reason:"선행사 없이 뒤 절 'the data showed'가 목적어 빠진 불완전 구조이므로 <span class='tag-ok'>what</span>이 적절합니다.",
-    wrongReason:"<span class='tag-no'>that</span>은 완전한 절을 이끌거나 선행사가 있을 때 사용합니다.",
-    rule:"<span class='tag-rule'>what = the thing(s) which</span> (선행사 포함, 불완전한 절)" },
-  { id:22, opts:"disconnections / connections", answer:"connections", wrong:"disconnections", type:"주제 어휘 일관성",
-    reason:"글 전체 주제를 마무리하는 문장입니다. <span class='tag-ok'>connections</span>(인맥)이 논지와 일치합니다.",
-    wrongReason:"<span class='tag-no'>disconnections</span>(단절)은 '네트워크의 중요성'이라는 핵심 주장과 반대입니다.",
-    rule:"<span class='tag-rule'>결론 문장</span>은 본문 논지를 반영" }
+/* ═══════ PDF.js worker ═══════ */
+if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+/* ═══════ DEMO DATA — 정확한 해설 23개 ═══════ */
+const bracketItems=[
+  {id:0,opts:"what / that",answer:"that",wrong:"what",type:"명사절 접속사 that vs. 관계대명사 what",
+   reason:"<b>observed의 목적어절</b>을 이끄는 접속사가 필요합니다. 뒤 절 'regardless of … pushed people out of Mexico'는 주어(natural disasters)와 동사(pushed)가 모두 갖춰진 <b>완전한 절</b>이므로 명사절 접속사 <span class='tag-ok'>that</span>을 씁니다.",
+   wrongReason:"<span class='tag-no'>what</span>은 선행사를 포함한 관계대명사로, 절 안에 <b>명사 하나가 반드시 빠져야</b> 합니다. 이 절은 완전하므로 what을 쓸 수 없습니다.",
+   rule:"<span class='tag-rule'>that + 완전절</span> (명사절) / <span class='tag-rule'>what + 불완전절</span> (관계대명사)"},
+
+  {id:1,opts:"regardless of / depending on",answer:"regardless of",wrong:"depending on",type:"전치사구 의미 구분",
+   reason:"문맥상 '미국의 기회 여부와 <b>상관없이</b> 자연재해가 사람들을 밀어냈다'는 의미입니다. <span class='tag-ok'>regardless of</span>는 '~에 관계없이'로 이 문맥에 정확히 맞습니다.",
+   wrongReason:"<span class='tag-no'>depending on</span>은 '~에 따라서'라는 뜻으로, 기회가 있을 때만 재해가 발생한다는 인과 관계가 되어 글의 논지와 완전히 반대됩니다.",
+   rule:"<span class='tag-rule'>regardless of</span> = ~에 관계없이 / <span class='tag-rule'>depending on</span> = ~에 따라(인과)"},
+
+  {id:2,opts:"pushed / pushing",answer:"pushed",wrong:"pushing",type:"주절 본동사 vs. 현재분사",
+   reason:"주어 'natural disasters such as heavy rain'에 대한 <b>주절의 본동사</b>가 필요합니다. <span class='tag-ok'>pushed</span>(과거형 동사)가 서술어 역할을 하여 문장이 완성됩니다.",
+   wrongReason:"<span class='tag-no'>pushing</span>은 현재분사로 단독으로는 서술어가 될 수 없습니다. 이 경우 문장에 본동사가 없는 비문이 됩니다.",
+   rule:"<span class='tag-rule'>현재분사(-ing)는 단독 서술어 불가</span> — 주절에는 반드시 정동사(finite verb) 필요"},
+
+  {id:3,opts:"other / another",answer:"other",wrong:"another",type:"other vs. another 수 일치",
+   reason:"수식 대상이 복수명사 <b>opportunities</b>이므로 복수·불가산명사 앞에 쓰는 <span class='tag-ok'>other</span>가 맞습니다.",
+   wrongReason:"<span class='tag-no'>another</span>는 'an + other'의 결합으로 <b>단수 가산명사</b> 앞에만 사용합니다. (another opportunity ○ / another opportunities ✗)",
+   rule:"<span class='tag-rule'>another + 단수 가산명사</span> / <span class='tag-rule'>other + 복수·불가산명사</span>"},
+
+  {id:4,opts:"what / that",answer:"that",wrong:"what",type:"동격절 접속사 that",
+   reason:"'with the result ___'는 <b>동격절 구문</b>으로, result가 무엇인지 설명하는 완전한 절을 이끕니다. 완전한 절 앞에는 접속사 <span class='tag-ok'>that</span>을 씁니다.",
+   wrongReason:"<span class='tag-no'>what</span>은 불완전한 절을 이끌어야 하는데, 'a subsequent migrant … would have connections'는 완전한 절입니다.",
+   rule:"<span class='tag-rule'>with the result that + 완전절</span> — 결과를 나타내는 동격절 구문"},
+
+  {id:5,opts:"disconnections / connections",answer:"connections",wrong:"disconnections",type:"문맥 핵심 어휘",
+   reason:"같은 마을 출신 이민자가 미국에서 네트워크로 연결되어 취업을 도울 수 있다는 맥락에서 <span class='tag-ok'>connections</span>(인맥, 연결)이 정확합니다. 글 마지막 문장 'Network connections matter'와도 일치합니다.",
+   wrongReason:"<span class='tag-no'>disconnections</span>(단절)은 이민자들이 서로 도움을 주고받는 글의 핵심 내용과 정반대입니다.",
+   rule:"<span class='tag-rule'>글 전체 주제 일관성</span> 확인 — 결론 문장과 반드시 연결"},
+
+  {id:6,opts:"which / who",answer:"who",wrong:"which",type:"관계대명사 사람 vs. 사물",
+   reason:"선행사 connections는 형태는 사물이지만 실질적으로 <b>'미국에 있는 이민자들'을 지칭</b>합니다. 사람을 나타내는 선행사에는 <span class='tag-ok'>who</span>를 씁니다.",
+   wrongReason:"<span class='tag-no'>which</span>는 사물·동물을 선행사로 할 때 쓰는 관계대명사입니다. 사람(이민자들)을 지칭하는 경우에는 부적절합니다.",
+   rule:"<span class='tag-rule'>선행사가 사람 → who / whom</span> / 사물·동물 → which"},
+
+  {id:7,opts:"were / was",answer:"were",wrong:"was",type:"관계대명사절 동사 수 일치",
+   reason:"관계대명사 who의 선행사는 <b>connections(복수명사)</b>입니다. 선행사의 수에 동사를 일치시켜야 하므로 복수형 <span class='tag-ok'>were</span>가 맞습니다.",
+   wrongReason:"<span class='tag-no'>was</span>는 단수 동사로, 복수 선행사 connections와 수 일치가 되지 않습니다.",
+   rule:"<span class='tag-rule'>관계대명사절 동사의 수 = 선행사의 수</span> (선행사와 동사 사이 거리에 주의)"},
+
+  {id:8,opts:"employed / emplying",answer:"employed",wrong:"emplying",type:"be + 과거분사(상태) vs. 오기",
+   reason:"were 뒤에서 <b>'취업 상태에 있는'</b>을 나타내는 서술적 형용사(과거분사) <span class='tag-ok'>employed</span>가 올바릅니다. 'securely employed'는 '안정적으로 취업된 상태'를 의미합니다.",
+   wrongReason:"<span class='tag-no'>emplying</span>은 존재하지 않는 단어입니다. employing(고용하는)의 오기이며, 설령 employing이라도 be+~ing는 진행형으로 의미가 다릅니다.",
+   rule:"<span class='tag-rule'>be + p.p.</span> = 수동/상태 / be + ~ing = 진행 — 의미 구분 필수"},
+
+  {id:9,opts:"finding / found / find",answer:"find",wrong:"finding·found",type:"help + 목적어 + 원형부정사",
+   reason:"'<b>help + 목적어 + 동사원형(또는 to부정사)</b>' 구문에서 목적격 보어는 원형이나 to부정사 모두 가능합니다. 여기서는 <span class='tag-ok'>find</span>(원형)가 쓰였습니다.",
+   wrongReason:"<span class='tag-no'>finding</span>(현재분사)은 지각동사 구문의 목적격 보어로, <span class='tag-no'>found</span>(과거형)은 독립된 서술어로 기능하여 둘 다 이 구조에 부적절합니다.",
+   rule:"<span class='tag-rule'>help + O + 원형 / to-V</span> (두 형태 모두 허용, 원형이 더 자연스러움)"},
+
+  {id:10,opts:"what / that",answer:"that",wrong:"what",type:"명사절 접속사 that (predicted 목적어절)",
+   reason:"predicted의 <b>목적어절</b>을 이끄는 접속사입니다. 뒤 절 'if one compared … would be easier'는 주어·동사가 모두 있는 완전한 절이므로 <span class='tag-ok'>that</span>이 맞습니다.",
+   wrongReason:"<span class='tag-no'>what</span>은 불완전한 절(명사 하나 빠진 절)만 이끌 수 있는데, 이 절은 완전합니다.",
+   rule:"<span class='tag-rule'>동사 + that + 완전절</span> — predicted, believed, knew, said 등 뒤에 자주 출제"},
+
+  {id:11,opts:"compared / was compared",answer:"compared",wrong:"was compared",type:"능동태 vs. 수동태",
+   reason:"주어 one(=어떤 사람)이 직접 두 마을을 비교하는 <b>능동 관계</b>입니다. <span class='tag-ok'>compared</span>(과거 능동)가 맞습니다.",
+   wrongReason:"<span class='tag-no'>was compared</span>는 수동태로 '비교를 당했다'는 뜻이 되어, 주어 one이 비교를 수행한다는 문맥과 맞지 않습니다.",
+   rule:"<span class='tag-rule'>능동/수동 판단</span>: 주어가 행위의 주체면 능동, 행위의 대상이면 수동"},
+
+  {id:12,opts:"has had / had had",answer:"had had",wrong:"has had",type:"과거완료 vs. 현재완료",
+   reason:"과거 특정 시점(a given year, 비교 기준 연도)보다 <b>더 이전</b>에 가뭄이 있었다는 내용이므로 과거완료 <span class='tag-ok'>had had</span>가 필요합니다. (대과거 개념)",
+   wrongReason:"<span class='tag-no'>has had</span>는 현재완료로 현재와의 연관성을 나타내는데, 이 절은 가정법 과거 맥락(조건절 내)이므로 부적절합니다.",
+   rule:"<span class='tag-rule'>과거완료(had + p.p.)</span> = 과거 기준시점보다 더 앞선 사건·경험"},
+
+  {id:13,opts:"emigrating / to emigrate",answer:"to emigrate",wrong:"emigrating",type:"cause + 목적어 + to부정사",
+   reason:"'<b>cause + 목적어 + to부정사</b>' 구문의 목적격 보어로 <span class='tag-ok'>to emigrate</span>가 와야 합니다.",
+   wrongReason:"<span class='tag-no'>emigrating</span>(현재분사)은 see, hear, watch 등 지각동사의 목적격 보어로 쓰입니다. cause는 반드시 to부정사를 취합니다.",
+   rule:"<span class='tag-rule'>cause / force / allow / enable / require + O + to-V</span> (to부정사 필수)"},
+
+  {id:14,opts:"another / the others / the other",answer:"the other",wrong:"another·the others",type:"one ~ the other (둘 사이의 대응)",
+   reason:"<b>two villages</b> 중 하나(one of them)와 나머지 하나를 대응시키므로 <span class='tag-ok'>the other</span>를 씁니다. '둘 중 하나는 one, 나머지 하나는 the other'가 철칙입니다.",
+   wrongReason:"<span class='tag-no'>another</span>는 셋 이상에서 불특정 하나, <span class='tag-no'>the others</span>는 셋 이상에서 나머지 전부를 가리킵니다. 둘을 전제로 할 때는 쓸 수 없습니다.",
+   rule:"<span class='tag-rule'>둘: one ~ the other</span> / 셋 이상: one ~ another / one ~ the others / one ~ another ~ the other(s)"},
+
+  {id:15,opts:"had / did",answer:"did",wrong:"had",type:"대동사 do",
+   reason:"앞 절 전체(had had a drought … causing some villagers to emigrate)를 대신하는 <b>대동사</b>가 필요합니다. 영어에서 앞 내용 전체를 받을 때는 <span class='tag-ok'>did</span>로 대신합니다.",
+   wrongReason:"<span class='tag-no'>had</span>를 그대로 쓰면 'had had … had not'처럼 had가 세 번 겹쳐 매우 어색한 구조가 되며, 대동사로는 do/does/did를 씁니다.",
+   rule:"<span class='tag-rule'>대동사 do / does / did</span>로 앞 술어 전체를 대신 — 수·시제 일치"},
+
+  {id:16,opts:"it / that",answer:"it",wrong:"that",type:"가주어 it",
+   reason:"'___ would be easier for a resident … to find a job'에서 진주어는 'to find a job'이고, 주어 자리를 채우는 <b>가주어</b>는 <span class='tag-ok'>it</span>입니다.",
+   wrongReason:"<span class='tag-no'>that</span>은 접속사·지시대명사로 가주어로 쓰이지 않습니다. 가주어는 반드시 it입니다.",
+   rule:"<span class='tag-rule'>가주어 It ~ 진주어 to-V / that절</span> — It is 형용사 for O to-V 구문"},
+
+  {id:17,opts:"for / of",answer:"for",wrong:"of",type:"to부정사 의미상 주어 for vs. of",
+   reason:"'it would be easier <b>for a resident</b> to find a job'에서 to find의 의미상 주어를 나타내는 전치사는 <span class='tag-ok'>for</span>입니다.",
+   wrongReason:"<span class='tag-no'>of</span>는 kind, wise, clever, foolish, careless 등 <b>사람의 성품·태도를 나타내는 형용사</b> 뒤에서만 to부정사의 의미상 주어로 씁니다. easy는 해당 없습니다.",
+   rule:"<span class='tag-rule'>일반 형용사 → for + 목적격</span> / 성품 형용사(kind, wise…) → of + 목적격"},
+
+  {id:18,opts:"to find / find / found",answer:"to find",wrong:"find·found",type:"가주어 구문 진주어 to부정사",
+   reason:"'it is easier for a resident of the village with drought <b>___</b> a job'에서 가주어 it의 <b>진주어</b>가 되어야 하므로 <span class='tag-ok'>to find</span>(to부정사)가 와야 합니다.",
+   wrongReason:"<span class='tag-no'>find</span>(원형)는 가주어 it 구문에서 단독으로 진주어가 될 수 없습니다. <span class='tag-no'>found</span>는 과거형으로 별도 서술어로 기능해 문장 구조가 무너집니다.",
+   rule:"<span class='tag-rule'>It + be + 형용사 + for O + to-V</span> — 진주어는 반드시 to부정사"},
+
+  {id:19,opts:"for the resident / the resident",answer:"for the resident",wrong:"the resident",type:"비교 구문 병렬성",
+   reason:"비교 대상은 문법적으로 동일한 구조여야 합니다. 앞에 '<b>for a resident</b> of the village with drought'가 있으므로 than 뒤도 <span class='tag-ok'>for the resident</span> of the village without a drought로 받아야 병렬이 완성됩니다.",
+   wrongReason:"<span class='tag-no'>the resident</span>만 쓰면 앞의 'for a resident'(전치사구)와 품사·구조가 달라져 <b>비교 대상의 병렬성</b>이 깨집니다.",
+   rule:"<span class='tag-rule'>than 앞뒤 비교 대상은 동일한 문법 구조</span> — 품사, 형태 모두 일치"},
+
+  {id:20,opts:"seeing / to see",answer:"to see",wrong:"seeing",type:"expect + to부정사",
+   reason:"expect는 <b>to부정사를 목적어로 취하는 동사</b>입니다. <span class='tag-ok'>to see</span>가 올바릅니다.",
+   wrongReason:"<span class='tag-no'>seeing</span>(동명사)은 enjoy, mind, avoid, finish, consider 등 동명사를 목적어로 취하는 동사 뒤에 씁니다. expect 뒤에는 동명사가 올 수 없습니다.",
+   rule:"<span class='tag-rule'>expect / want / hope / wish / plan / decide + to-V</span> (동명사 목적어 불가)"},
+
+  {id:21,opts:"that / what",answer:"what",wrong:"that",type:"관계대명사 what (선행사 포함)",
+   reason:"'This is exactly ___'에서 선행사가 없고, 뒤 절 'the data showed'는 <b>목적어(showed의 목적어)가 빠진 불완전한 절</b>입니다. 선행사를 포함한 관계대명사 <span class='tag-ok'>what</span>이 적절합니다.",
+   wrongReason:"<span class='tag-no'>that</span>은 선행사가 있는 관계대명사이거나 접속사로 쓰입니다. 선행사 없이 불완전한 절을 이끌 때는 what을 써야 합니다.",
+   rule:"<span class='tag-rule'>what = the thing(s) which</span> — 선행사 포함·불완전절 / that = 선행사 필요·완전절(접속사)"},
+
+  {id:22,opts:"disconnections / connections",answer:"connections",wrong:"disconnections",type:"주제어 일관성 (결론 문장)",
+   reason:"글 전체의 결론이자 주제문인 'Network ___ matter'는 이민자들의 <b>인맥(연결망)이 중요하다</b>는 논지를 마무리합니다. <span class='tag-ok'>connections</span>가 정확합니다.",
+   wrongReason:"<span class='tag-no'>disconnections</span>(단절, 분리)는 '네트워크가 중요하다'는 글 전체의 핵심 주장과 완전히 반대되는 단어입니다.",
+   rule:"<span class='tag-rule'>결론 문장 = 글의 주제 반영</span> — 논지 일관성, 5번 항목과 연계 출제"}
 ];
 
-const demoPassageRaw = [
-  { text:"Professor Kaivan Munshi observed " },
-  { bracket:0 }, { text:", " }, { bracket:1 },
-  { text:" the opportunities in the United States, natural disasters such as heavy rain " },
-  { bracket:2 }, { text:" people out of Mexico. When the rains failed in a particular village, a group of people left to seek " },
-  { bracket:3 }, { text:" opportunities. Many of them ended up in the United States, with the result " },
-  { bracket:4 }, { text:" a subsequent migrant from the same village would have " },
-  { bracket:5 }, { text:" in the US " }, { bracket:6 }, { text:" " }, { bracket:7 },
-  { text:" securely " }, { bracket:8 }, { text:" and able to help him or her " }, { bracket:9 },
-  { text:" a job. Kaivan predicted " }, { bracket:10 }, { text:" if one " }, { bracket:11 },
-  { text:" two villages in Mexico with the same weather in a given year, but one of them " }, { bracket:12 },
-  { text:" a drought in previous years [causing some villagers " }, { bracket:13 },
-  { text:"] while " }, { bracket:14 }, { text:" " }, { bracket:15 },
-  { text:" not, " }, { bracket:16 }, { text:" would be easier " }, { bracket:17 },
-  { text:" a resident of the village with drought " }, { bracket:18 },
-  { text:" a job than " }, { bracket:19 },
-  { text:" of the village without a drought. He expected " }, { bracket:20 },
-  { text:" more migrants, more employed migrants, and better-paid migrants. This is exactly " }, { bracket:21 },
-  { text:" the data showed. Network " }, { bracket:22 }, { text:" matter." }
+const demoRaw=[
+  {t:"Professor Kaivan Munshi observed "},{b:0},{t:", "},{b:1},
+  {t:" the opportunities in the United States, natural disasters such as heavy rain "},{b:2},
+  {t:" people out of Mexico. When the rains failed in a particular village, a group of people left to seek "},{b:3},
+  {t:" opportunities. Many of them ended up in the United States, with the result "},{b:4},
+  {t:" a subsequent migrant from the same village would have "},{b:5},
+  {t:" in the US "},{b:6},{t:" "},{b:7},{t:" securely "},{b:8},{t:" and able to help him or her "},{b:9},
+  {t:" a job. Kaivan predicted "},{b:10},{t:" if one "},{b:11},
+  {t:" two villages in Mexico with the same weather in a given year, but one of them "},{b:12},
+  {t:" a drought in previous years [causing some villagers "},{b:13},{t:"] while "},{b:14},{t:" "},{b:15},
+  {t:" not, "},{b:16},{t:" would be easier "},{b:17},
+  {t:" a resident of the village with drought "},{b:18},{t:" a job than "},{b:19},
+  {t:" of the village without a drought. He expected "},{b:20},
+  {t:" more migrants, more employed migrants, and better-paid migrants. This is exactly "},{b:21},
+  {t:" the data showed. Network "},{b:22},{t:" matter."}
 ];
 
-/* ═══════════ STATE ═══════════ */
-let demoSeen = new Set(), demoCurrent = null;
-let inputItems = [], inputSeen = new Set(), inputCurrent = null;
-let inputType = 'bracket';
+/* ═══════ STATE ═══════ */
+let demoSeen=new Set(),demoCurrent=null;
+let inputItems=[],inputSeen=new Set(),inputCurrent=null,inputType='bracket';
 
-/* ═══════════ INIT DEMO ═══════════ */
-function initDemo() {
-  let html = '';
-  demoPassageRaw.forEach(seg => {
-    if (seg.text !== undefined) {
-      html += seg.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    } else {
-      const item = bracketItems[seg.bracket];
-      html += `<span class="bracket-wrap"><span class="bracket" data-id="${item.id}">(${item.opts})</span><span class="bracket-num">${item.id+1}</span></span>`;
+/* ═══════ INIT DEMO ═══════ */
+function initDemo(){
+  let html='';
+  demoRaw.forEach(seg=>{
+    if(seg.t!==undefined){
+      html+=seg.t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }else{
+      const item=bracketItems[seg.b];
+      html+=`<span class="bracket-wrap"><span class="bracket" data-id="${item.id}">(${item.opts})</span><span class="bracket-num">${item.id+1}</span></span>`;
     }
   });
-  document.getElementById('demo-passage').innerHTML = html;
-  document.querySelectorAll('#demo-passage .bracket').forEach(el => {
-    el.addEventListener('click', () => demoShow(parseInt(el.dataset.id)));
+  document.getElementById('demo-passage').innerHTML=html;
+  document.querySelectorAll('#demo-passage .bracket').forEach(el=>{
+    el.addEventListener('click',()=>demoShow(parseInt(el.dataset.id)));
   });
   buildDemoNav();
 }
 
-function buildDemoNav() {
-  const row = document.getElementById('demo-nav');
-  row.innerHTML = '';
-  bracketItems.forEach(item => {
-    const b = document.createElement('button');
-    b.className = 'nav-btn' + (demoSeen.has(item.id) ? ' done':'') + (demoCurrent===item.id?' cur':'');
-    b.textContent = item.id+1;
-    b.onclick = () => demoShow(item.id);
+function buildDemoNav(){
+  const row=document.getElementById('demo-nav');
+  row.innerHTML='';
+  bracketItems.forEach(item=>{
+    const b=document.createElement('button');
+    b.className='nav-btn'+(demoSeen.has(item.id)?' done':'')+(demoCurrent===item.id?' cur':'');
+    b.textContent=item.id+1;
+    b.onclick=()=>demoShow(item.id);
     row.appendChild(b);
   });
-  document.getElementById('demo-count').textContent = demoSeen.size + ' / ' + bracketItems.length;
-  document.getElementById('demo-prog').style.width = Math.round(demoSeen.size/bracketItems.length*100)+'%';
+  document.getElementById('demo-count').textContent=demoSeen.size+' / '+bracketItems.length;
+  document.getElementById('demo-prog').style.width=Math.round(demoSeen.size/bracketItems.length*100)+'%';
 }
 
-function demoShow(id) {
-  demoCurrent = id;
-  demoSeen.add(id);
-  document.querySelectorAll('#demo-passage .bracket').forEach(el => {
-    const eid = parseInt(el.dataset.id);
-    el.classList.toggle('active', eid===id);
-    if (demoSeen.has(eid)) el.classList.add('seen'); else el.classList.remove('seen');
+function demoShow(id){
+  demoCurrent=id; demoSeen.add(id);
+  document.querySelectorAll('#demo-passage .bracket').forEach(el=>{
+    const eid=parseInt(el.dataset.id);
+    el.classList.toggle('active',eid===id);
+    if(demoSeen.has(eid))el.classList.add('seen');else el.classList.remove('seen');
   });
   buildDemoNav();
-  renderPanel(document.getElementById('demo-panel'), bracketItems[id], id+1, 'demo');
+  renderPanel(document.getElementById('demo-panel'),bracketItems[id],id+1,'demo');
 }
 
-/* ═══════════ RENDER PANEL ═══════════ */
-function renderPanel(panelEl, item, num, ctx) {
-  if (!item) return;
-  panelEl.innerHTML = `
+/* ═══════ RENDER PANEL ═══════ */
+function renderPanel(panelEl,item,num,ctx){
+  if(!item)return;
+  panelEl.innerHTML=`
     <div class="panel-header">
       <span class="panel-num"># ${num}</span>
       <span class="panel-type">${item.type||''}</span>
     </div>
     <div class="answer-row">
       <span class="answer-chip">✓ ${item.answer}</span>
-      ${item.wrong ? `<span class="wrong-chip">${item.wrong}</span>` : ''}
+      ${item.wrong?`<span class="wrong-chip">${item.wrong}</span>`:''}
     </div>
     <div class="section-lbl">정답 선택 이유</div>
     <div class="expl">${item.reason}</div>
@@ -451,108 +425,187 @@ function renderPanel(panelEl, item, num, ctx) {
     <div class="expl">${item.wrongReason}</div>
     <div class="section-lbl">핵심 규칙</div>
     <div class="expl">${item.rule}</div>
-    <button class="dl-btn" onclick="downloadItem(${JSON.stringify(item).replace(/"/g,'&quot;')}, ${num})">⬇ 이 항목 해설 다운로드</button>
-    ${ctx==='input' ? `<button class="dl-btn dl-all-btn" onclick="downloadAll()">⬇ 전체 해설 다운로드</button>` : `<button class="dl-btn dl-all-btn" onclick="downloadDemoAll()">⬇ 전체 해설 다운로드</button>`}
-  `;
+    <button class="dl-btn" onclick='downloadItem(${JSON.stringify(item).replace(/'/g,"&#39;")},${num})'>⬇ 이 항목 해설 저장</button>
+    <button class="dl-btn dl-all-btn" onclick="${ctx==='demo'?'downloadDemoAll()':'downloadAll()'}">⬇ 전체 해설 저장</button>`;
 }
 
-/* ═══════════ DOWNLOAD ═══════════ */
-function makeItemHTML(item, num) {
-  return `
-<div style="margin-bottom:24px;padding:16px;border:1px solid #e0ddd5;border-radius:8px;font-family:sans-serif;font-size:14px;line-height:1.8;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #e0ddd5;">
-    <span style="background:#1a1a18;color:#fff;border-radius:5px;padding:2px 10px;font-size:12px;font-weight:700;"># ${num}</span>
-    <span style="color:#5a5a54;font-size:13px;">${item.type||''}</span>
-  </div>
-  <div style="margin-bottom:10px;">
-    <span style="background:#eaf3de;color:#2e6b12;border:1px solid #b8d990;border-radius:20px;padding:4px 14px;font-size:13px;font-weight:700;">✓ ${item.answer}</span>
-    ${item.wrong ? `<span style="background:#fceaea;color:#8a2020;border:1px solid #f0b0b0;border-radius:20px;padding:4px 14px;font-size:13px;font-weight:700;text-decoration:line-through;margin-left:8px;">${item.wrong}</span>` : ''}
-  </div>
-  <div style="font-size:11px;font-weight:700;color:#9a9a90;letter-spacing:.07em;text-transform:uppercase;margin:10px 0 4px;">정답 선택 이유</div>
-  <div>${item.reason}</div>
-  <div style="font-size:11px;font-weight:700;color:#9a9a90;letter-spacing:.07em;text-transform:uppercase;margin:10px 0 4px;">오답 분석</div>
-  <div>${item.wrongReason}</div>
-  <div style="font-size:11px;font-weight:700;color:#9a9a90;letter-spacing:.07em;text-transform:uppercase;margin:10px 0 4px;">핵심 규칙</div>
-  <div>${item.rule}</div>
+/* ═══════ DOWNLOAD ═══════ */
+function makeItemHTML(item,num){
+  return `<div style="margin-bottom:24px;padding:18px;border:1px solid #e0ddd5;border-radius:10px;font-size:14px;line-height:1.9;font-family:'Noto Sans KR',sans-serif;">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #e0ddd5;">
+  <span style="background:#1a1a18;color:#fff;border-radius:5px;padding:2px 10px;font-size:12px;font-weight:700;"># ${num}</span>
+  <span style="color:#5a5a54;font-size:13px;">${item.type||''}</span>
+</div>
+<div style="margin-bottom:10px;">
+  <span style="background:#eaf3de;color:#2e6b12;border:1px solid #b8d990;border-radius:20px;padding:4px 14px;font-size:13px;font-weight:700;">✓ ${item.answer}</span>
+  ${item.wrong?`<span style="background:#fceaea;color:#8a2020;border:1px solid #f0b0b0;border-radius:20px;padding:4px 14px;font-size:13px;text-decoration:line-through;margin-left:6px;">${item.wrong}</span>`:''}
+</div>
+<div style="font-size:11px;font-weight:700;color:#9a9a90;text-transform:uppercase;letter-spacing:.07em;margin:10px 0 4px;">정답 선택 이유</div>
+<div>${item.reason}</div>
+<div style="font-size:11px;font-weight:700;color:#9a9a90;text-transform:uppercase;letter-spacing:.07em;margin:10px 0 4px;">오답 분석</div>
+<div>${item.wrongReason}</div>
+<div style="font-size:11px;font-weight:700;color:#9a9a90;text-transform:uppercase;letter-spacing:.07em;margin:10px 0 4px;">핵심 규칙</div>
+<div>${item.rule}</div>
 </div>`;
 }
 
-function downloadItem(item, num) {
-  const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>어법 해설 #${num}</title>
-<style>body{font-family:'Noto Sans KR',sans-serif;max-width:680px;margin:40px auto;padding:0 20px;background:#fff;}
-.tag-ok{background:#eaf3de;color:#2e6b12;border-radius:3px;padding:1px 5px;font-weight:600;}
-.tag-no{background:#fceaea;color:#8a2020;border-radius:3px;padding:1px 5px;text-decoration:line-through;}
-.tag-rule{background:#eeedfc;color:#3a2f8a;border-radius:3px;padding:1px 5px;font-weight:600;}
-h1{font-size:18px;margin-bottom:20px;color:#1a1a18;}
-</style></head><body>
-<h1>카이로스 영어 — 어법 해설</h1>
-${makeItemHTML(item, num)}
-<p style="font-size:12px;color:#aaa;margin-top:20px;">KAIROS ENGLISH · 유일영수학원</p>
-</body></html>`;
-  triggerDownload(html, `어법해설_${num}번.html`);
-}
-
-function downloadAll() {
-  const items = inputItems.length ? inputItems : bracketItems;
-  downloadItemList(items, '입력_어법해설_전체');
-}
-
-function downloadDemoAll() {
-  downloadItemList(bracketItems, '01강_어법해설_전체');
-}
-
-function downloadItemList(items, filename) {
-  const body = items.map((item, i) => makeItemHTML(item, i+1)).join('\n');
-  const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>어법 해설 전체</title>
+function dlWrap(body,title){
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>${title}</title>
 <style>body{font-family:'Noto Sans KR',sans-serif;max-width:720px;margin:40px auto;padding:0 20px;background:#fff;}
 .tag-ok{background:#eaf3de;color:#2e6b12;border-radius:3px;padding:1px 5px;font-weight:600;}
 .tag-no{background:#fceaea;color:#8a2020;border-radius:3px;padding:1px 5px;text-decoration:line-through;}
 .tag-rule{background:#eeedfc;color:#3a2f8a;border-radius:3px;padding:1px 5px;font-weight:600;}
-h1{font-size:20px;margin-bottom:8px;color:#1a1a18;}
-.subtitle{font-size:13px;color:#9a9a90;margin-bottom:28px;}
+h1{font-size:20px;margin-bottom:6px;}
+.sub{font-size:13px;color:#9a9a90;margin-bottom:28px;}
 @media print{body{margin:20px;}}</style></head><body>
-<h1>카이로스 영어 — 어법 해설 전체</h1>
-<div class="subtitle">KAIROS ENGLISH · 유일영수학원 · 총 ${items.length}항목</div>
+<h1>카이로스 영어 — ${title}</h1>
+<div class="sub">KAIROS ENGLISH · 유일영수학원</div>
 ${body}
 <p style="font-size:12px;color:#aaa;margin-top:24px;text-align:center;">KAIROS ENGLISH · 아산 배방 유일영수학원</p>
 </body></html>`;
-  triggerDownload(html, filename + '.html');
 }
 
-function triggerDownload(html, filename) {
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+function triggerDL(html,fn){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+  a.download=fn; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 
-/* ═══════════ PAGE SWITCH ═══════════ */
-function switchPage(name, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+function downloadItem(item,num){triggerDL(dlWrap(makeItemHTML(item,num),`어법해설 #${num}`),`어법해설_${num}번.html`);}
+function downloadDemoAll(){triggerDL(dlWrap(bracketItems.map((it,i)=>makeItemHTML(it,i+1)).join(''),'01강 전체 해설'),`01강_어법해설_전체.html`);}
+function downloadAll(){
+  const items=inputItems.length?inputItems:bracketItems;
+  triggerDL(dlWrap(items.map((it,i)=>makeItemHTML(it,i+1)).join(''),'어법해설 전체'),`어법해설_전체.html`);
+}
+
+/* ═══════ PAGE SWITCH ═══════ */
+function switchPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   btn.classList.add('active');
 }
 
-/* ═══════════ TYPE / METHOD ═══════════ */
-function setType(t) {
-  inputType = t;
-  document.getElementById('type-bracket').classList.toggle('active', t==='bracket');
-  document.getElementById('type-uline').classList.toggle('active', t==='uline');
-  document.getElementById('hint-bracket').style.display = t==='bracket' ? '' : 'none';
-  document.getElementById('hint-uline').style.display   = t==='uline'   ? '' : 'none';
-  document.getElementById('uline-answers-section').style.display = t==='uline' ? '' : 'none';
-  if (t==='uline') updateUlineAnswersList();
+/* ═══════ TYPE ═══════ */
+function setType(t){
+  inputType=t;
+  document.getElementById('type-bracket').classList.toggle('active',t==='bracket');
+  document.getElementById('type-uline').classList.toggle('active',t==='uline');
+  document.getElementById('hint-bracket').style.display=t==='bracket'?'':'none';
+  document.getElementById('hint-uline').style.display=t==='uline'?'':'none';
+  document.getElementById('uline-answers-section').style.display=t==='uline'?'':'none';
+  if(t==='uline')updateUlineAnswersList();
 }
 
-/* ═══════════ ULINE ANSWERS LIST ═══════════ */
-function updateUlineAnswersList() {
-  const text = document.getElementById('input-text').value;
-  const matches = [...text.matchAll(/\[([^\]]+)\]/g)];
-  const list = document.getElementById('uline-answers-list');
-  list.innerHTML = matches.map((m, i) => `
+/* ═══════ FILE UPLOAD ═══════ */
+const dropZone=document.getElementById('drop-zone');
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('drag-over');});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop',e=>{
+  e.preventDefault();dropZone.classList.remove('drag-over');
+  if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);
+});
+
+function setUploadStatus(msg){
+  document.getElementById('upload-status').classList.add('show');
+  document.getElementById('upload-status-text').textContent=msg;
+  document.getElementById('upload-ok').classList.remove('show');
+}
+function setUploadOk(msg){
+  document.getElementById('upload-status').classList.remove('show');
+  document.getElementById('upload-ok').classList.add('show');
+  document.getElementById('upload-ok-text').textContent=msg;
+}
+
+async function handleFile(file){
+  if(!file)return;
+  const name=file.name.toLowerCase();
+  setUploadStatus('파일 처리 중...');
+  try{
+    let text='';
+    if(name.endsWith('.txt')){
+      text=await readAsText(file);
+    } else if(name.endsWith('.pdf')){
+      text=await extractPDF(file);
+    } else if(name.endsWith('.docx')||name.endsWith('.doc')){
+      text=await extractWord(file);
+    } else if(file.type.startsWith('image/')){
+      text=await extractImage(file);
+    } else {
+      text=await readAsText(file);
+    }
+    text=text.trim();
+    if(!text){setUploadStatus('텍스트를 추출할 수 없습니다. 직접 입력해주세요.');return;}
+    document.getElementById('input-text').value=text;
+    setUploadOk(`추출 완료 (${text.length}자) — 아래에서 확인·수정 후 해설 생성을 누르세요`);
+    if(inputType==='uline')updateUlineAnswersList();
+  }catch(err){
+    setUploadStatus('오류: '+err.message+' — 텍스트를 직접 입력해주세요.');
+  }
+}
+
+function readAsText(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=e=>res(e.target.result);
+    r.onerror=()=>rej(new Error('파일 읽기 실패'));
+    r.readAsText(file,'UTF-8');
+  });
+}
+
+async function extractPDF(file){
+  if(!window.pdfjsLib)throw new Error('PDF.js 로드 안 됨');
+  const ab=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+  let text='';
+  for(let i=1;i<=pdf.numPages;i++){
+    const page=await pdf.getPage(i);
+    const content=await page.getTextContent();
+    const pageText=content.items.map(it=>it.str).join(' ');
+    text+=pageText+'\n';
+  }
+  return text;
+}
+
+async function extractWord(file){
+  if(!window.mammoth)throw new Error('mammoth.js 로드 안 됨');
+  const ab=await file.arrayBuffer();
+  const result=await mammoth.extractRawText({arrayBuffer:ab});
+  return result.value;
+}
+
+async function extractImage(file){
+  /* Tesseract.js가 없으면 사용자에게 안내 */
+  return new Promise((res,rej)=>{
+    if(window.Tesseract){
+      Tesseract.recognize(file,'eng+kor',{logger:m=>{
+        if(m.status==='recognizing text')
+          setUploadStatus(`이미지 OCR 중... ${Math.round(m.progress*100)}%`);
+      }}).then(({data:{text}})=>res(text)).catch(rej);
+    } else {
+      /* Tesseract 없을 때: FileReader로 DataURL만 만들고 안내 */
+      const reader=new FileReader();
+      reader.onload=()=>{
+        rej(new Error('이미지에서 텍스트 자동 추출은 지원되지 않습니다. 텍스트를 직접 입력해주세요.'));
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+/* Tesseract.js 동적 로드 시도 */
+(function(){
+  const s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js';
+  document.head.appendChild(s);
+})();
+
+/* ═══════ ULINE ANSWERS ═══════ */
+function updateUlineAnswersList(){
+  const text=document.getElementById('input-text').value;
+  const matches=[...text.matchAll(/\[([^\]]+)\]/g)];
+  document.getElementById('uline-answers-list').innerHTML=matches.map((m,i)=>`
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
       <span style="font-size:13px;color:var(--text2);min-width:20px;font-weight:700;">${i+1}.</span>
       <span style="font-size:13px;background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border);border-radius:4px;padding:2px 8px;">${m[1]}</span>
@@ -560,130 +613,111 @@ function updateUlineAnswersList() {
       <label style="font-size:13px;display:flex;align-items:center;gap:4px;cursor:pointer;"><input type="radio" name="uline-${i}" value="wrong"> 틀림</label>
     </div>`).join('');
 }
-
-document.getElementById('input-text').addEventListener('input', () => {
-  if (inputType==='uline') updateUlineAnswersList();
+document.getElementById('input-text').addEventListener('input',()=>{
+  if(inputType==='uline')updateUlineAnswersList();
 });
 
-/* ═══════════ GENERATE ═══════════ */
-function generateFromInput() {
-  const text = document.getElementById('input-text').value.trim();
-  if (!text) { alert('지문을 입력해주세요.'); return; }
-  if (inputType==='bracket') generateBracket(text);
+/* ═══════ GENERATE ═══════ */
+function generateFromInput(){
+  const text=document.getElementById('input-text').value.trim();
+  if(!text){alert('지문을 입력해주세요.');return;}
+  if(inputType==='bracket')generateBracket(text);
   else generateUline(text);
 }
 
-function generateBracket(text) {
-  const items = [];
-  let idx = 0;
-  const html = text.replace(/\(([^)]+\/[^)]+)\)/g, (match, inner) => {
-    const opts = inner.trim();
-    const answer = opts.split('/')[0].trim();
-    items.push({ id:idx, opts, answer, wrong: opts.split('/').slice(1).map(s=>s.trim()).join('/'),
-      type:'괄호 어법 ' + (idx+1),
-      reason:`선택지 중 <span class='tag-ok'>${answer}</span>이 문맥·문법상 적절합니다.`,
-      wrongReason:`나머지 선택지는 문법 또는 문맥상 부적절합니다.`,
-      rule:`<span class='tag-rule'># ${idx+1}</span> 항목 — 정답: ${answer}` });
-    const res = `<span class="bracket-wrap"><span class="bracket" data-inputid="${idx}">(${opts})</span><span class="bracket-num">${idx+1}</span></span>`;
-    idx++;
-    return res;
+function generateBracket(text){
+  const items=[];let idx=0;
+  const html=text.replace(/\(([^)]+\/[^)]+)\)/g,(match,inner)=>{
+    const opts=inner.trim();
+    const answer=opts.split('/')[0].trim();
+    const wrongs=opts.split('/').slice(1).map(s=>s.trim()).join(' / ');
+    items.push({id:idx,opts,answer,wrong:wrongs,type:`괄호 어법 ${idx+1}번`,
+      reason:`선택지 중 <span class="tag-ok">${answer}</span>이 이 문맥에서 문법적으로 적절합니다. 선택지를 하나씩 대입하여 문법 규칙과 문맥을 함께 확인하세요.`,
+      wrongReason:`<span class="tag-no">${wrongs}</span>은(는) 문법 규칙 또는 문맥상 이유로 부적절합니다.`,
+      rule:`<span class="tag-rule"># ${idx+1}</span> — 정답: ${answer} (각 항목의 문법 유형을 직접 분석하세요)`});
+    const res=`<span class="bracket-wrap"><span class="bracket" data-inputid="${idx}">(${opts})</span><span class="bracket-num">${idx+1}</span></span>`;
+    idx++;return res;
   });
-  if (!items.length) { alert('괄호 형식 (A / B)를 찾을 수 없습니다.'); return; }
-  inputItems = items; inputSeen = new Set(); inputCurrent = null;
-  showInputResult(html, items);
+  if(!items.length){alert('괄호 형식 (A / B)를 찾을 수 없습니다.');return;}
+  inputItems=items;inputSeen=new Set();inputCurrent=null;
+  showInputResult(html,items);
 }
 
-function generateUline(text) {
-  const matches = [...text.matchAll(/\[([^\]]+)\]/g)];
-  if (!matches.length) { alert('[단어/구] 형식을 찾을 수 없습니다.'); return; }
-  const items = [];
-  let idx = 0;
-  const html = text.replace(/\[([^\]]+)\]/g, (match, word) => {
-    const isCorrect = document.querySelector(`input[name="uline-${idx}"]:checked`)?.value !== 'wrong';
-    items.push({ id:idx, word, isCorrect, answer: isCorrect ? word+' (맞음)' : word+' (틀림)', wrong: isCorrect ? '' : word,
-      type:'밑줄 어법 ' + (idx+1),
-      reason: isCorrect ? `<span class='tag-ok'>${word}</span>은(는) 이 문맥에서 문법적으로 올바른 표현입니다.`
-                        : `<span class='tag-no'>${word}</span>은(는) 이 문맥에서 문법적으로 <strong>틀린</strong> 표현입니다.`,
-      wrongReason: isCorrect ? '오류 없음 — 올바른 표현입니다.' : `${word}의 형태나 쓰임이 문법 규칙에 맞지 않습니다.`,
-      rule: isCorrect ? `<span class='tag-rule'>${word}</span> — 올바른 용법` : `<span class='tag-rule'>${word}</span>을 바른 형태로 수정 필요` });
-    const cl = isCorrect ? '' : ' wrong-uline';
-    const res = `<span class="uline${cl}" data-ulineid="${idx}">${word}<span class="uline-num">${idx+1}</span></span>`;
-    idx++;
-    return res;
+function generateUline(text){
+  const matches=[...text.matchAll(/\[([^\]]+)\]/g)];
+  if(!matches.length){alert('[단어/구] 형식을 찾을 수 없습니다.');return;}
+  const items=[];let idx=0;
+  const html=text.replace(/\[([^\]]+)\]/g,(match,word)=>{
+    const isCorrect=document.querySelector(`input[name="uline-${idx}"]:checked`)?.value!=='wrong';
+    items.push({id:idx,word,isCorrect,answer:isCorrect?word+' (맞음)':word+' (틀림)',wrong:isCorrect?'':word,
+      type:`밑줄 어법 ${idx+1}번`,
+      reason:isCorrect?`<span class="tag-ok">${word}</span>은(는) 이 문맥에서 문법적으로 올바른 표현입니다.`
+                      :`<span class="tag-no">${word}</span>은(는) 이 문맥에서 문법적으로 <b>틀린</b> 표현입니다. 올바른 형태로 고쳐야 합니다.`,
+      wrongReason:isCorrect?'오류 없음 — 올바른 표현입니다.':`${word}의 형태나 쓰임이 이 문맥의 문법 규칙에 맞지 않습니다.`,
+      rule:isCorrect?`<span class="tag-rule">${word}</span> — 올바른 용법`:`<span class="tag-rule">${word}</span>을 올바른 형태로 수정 필요`});
+    const cl=isCorrect?'':' wrong-uline';
+    const res=`<span class="uline${cl}" data-ulineid="${idx}">${word}<span class="uline-num">${idx+1}</span></span>`;
+    idx++;return res;
   });
-  inputItems = items; inputSeen = new Set(); inputCurrent = null;
-  showInputResult(html, items);
-
-  if (!document.getElementById('uline-extra-style')) {
-    const s = document.createElement('style');
-    s.id = 'uline-extra-style';
-    s.textContent = '.wrong-uline{border-bottom-color:#c02020!important;}.wrong-uline .uline-num{color:#c02020!important;}';
+  inputItems=items;inputSeen=new Set();inputCurrent=null;
+  showInputResult(html,items);
+  if(!document.getElementById('uline-extra-style')){
+    const s=document.createElement('style');
+    s.id='uline-extra-style';
+    s.textContent='.wrong-uline{border-bottom-color:#c02020!important;}.wrong-uline .uline-num{color:#c02020!important;}';
     document.head.appendChild(s);
   }
 }
 
-function showInputResult(html, items) {
-  document.getElementById('input-passage-card').style.display = '';
-  document.getElementById('input-passage-display').innerHTML = html;
-  document.getElementById('input-nav-card').style.display = '';
-  buildInputNav();
-  updateInputCount();
-
-  document.querySelectorAll('#input-passage-display .bracket').forEach(el => {
-    el.addEventListener('click', () => inputShow(parseInt(el.dataset.inputid)));
+function showInputResult(html,items){
+  document.getElementById('input-passage-card').style.display='';
+  document.getElementById('input-passage-display').innerHTML=html;
+  document.getElementById('input-nav-card').style.display='';
+  buildInputNav();updateInputCount();
+  document.querySelectorAll('#input-passage-display .bracket').forEach(el=>{
+    el.addEventListener('click',()=>inputShow(parseInt(el.dataset.inputid)));
   });
-  document.querySelectorAll('#input-passage-display .uline').forEach(el => {
-    el.addEventListener('click', () => inputShow(parseInt(el.dataset.ulineid)));
+  document.querySelectorAll('#input-passage-display .uline').forEach(el=>{
+    el.addEventListener('click',()=>inputShow(parseInt(el.dataset.ulineid)));
   });
-
-  document.getElementById('input-panel').innerHTML = '<div class="panel-empty"><div class="panel-empty-icon">☝</div><span>항목을 클릭하면 해설이 표시됩니다</span></div>';
+  document.getElementById('input-panel').innerHTML='<div class="panel-empty"><div class="panel-empty-icon">☝</div><span>항목을 클릭하면 해설이 표시됩니다</span></div>';
 }
 
-function buildInputNav() {
-  const row = document.getElementById('input-nav');
-  row.innerHTML = '';
-  inputItems.forEach(item => {
-    const b = document.createElement('button');
-    b.className = 'nav-btn'+(inputSeen.has(item.id)?' done':'')+(inputCurrent===item.id?' cur':'');
-    b.textContent = item.id+1;
-    b.onclick = () => inputShow(item.id);
-    row.appendChild(b);
+function buildInputNav(){
+  const row=document.getElementById('input-nav');row.innerHTML='';
+  inputItems.forEach(item=>{
+    const b=document.createElement('button');
+    b.className='nav-btn'+(inputSeen.has(item.id)?' done':'')+(inputCurrent===item.id?' cur':'');
+    b.textContent=item.id+1;b.onclick=()=>inputShow(item.id);row.appendChild(b);
   });
 }
-
-function updateInputCount() {
-  document.getElementById('input-count').textContent = inputSeen.size+' / '+inputItems.length;
-  if (inputItems.length) document.getElementById('input-prog').style.width = Math.round(inputSeen.size/inputItems.length*100)+'%';
+function updateInputCount(){
+  document.getElementById('input-count').textContent=inputSeen.size+' / '+inputItems.length;
+  if(inputItems.length)document.getElementById('input-prog').style.width=Math.round(inputSeen.size/inputItems.length*100)+'%';
 }
-
-function inputShow(id) {
-  inputCurrent = id;
-  inputSeen.add(id);
-  document.querySelectorAll('#input-passage-display .bracket, #input-passage-display .uline').forEach(el => {
-    const eid = parseInt(el.dataset.inputid ?? el.dataset.ulineid);
-    el.classList.toggle('active', eid===id);
-    if (inputSeen.has(eid)) el.classList.add('seen'); else el.classList.remove('seen');
+function inputShow(id){
+  inputCurrent=id;inputSeen.add(id);
+  document.querySelectorAll('#input-passage-display .bracket, #input-passage-display .uline').forEach(el=>{
+    const eid=parseInt(el.dataset.inputid??el.dataset.ulineid);
+    el.classList.toggle('active',eid===id);
+    if(inputSeen.has(eid))el.classList.add('seen');else el.classList.remove('seen');
   });
-  buildInputNav();
-  updateInputCount();
-  renderPanel(document.getElementById('input-panel'), inputItems.find(i=>i.id===id), id+1, 'input');
+  buildInputNav();updateInputCount();
+  renderPanel(document.getElementById('input-panel'),inputItems.find(i=>i.id===id),id+1,'input');
 }
 
-/* ═══════════ SAMPLES ═══════════ */
-function loadSampleBracket() {
+/* ═══════ SAMPLES ═══════ */
+function loadSampleBracket(){
   setType('bracket');
-  document.getElementById('input-text').value =
-    'She (was / were) the only student who (have / had) finished the assignment, and the teacher (recognizing / recognized) her effort. It is important (for / of) students to (reviewing / review) their notes regularly.';
+  document.getElementById('input-text').value='She (was / were) the only student who (have / had) finished the assignment, and the teacher (recognizing / recognized) her effort. It is important (for / of) students to (reviewing / review) their notes regularly.';
 }
-
-function loadSampleUline() {
+function loadSampleUline(){
   setType('uline');
-  document.getElementById('input-text').value =
-    'The scientist [discovered] a new species that [have] never been seen before. The findings were [published] in a major journal, [making] it one of the most significant discoveries of the decade.';
+  document.getElementById('input-text').value='The scientist [discovered] a new species that [have] never been seen before. The findings were [published] in a major journal, [making] it one of the most significant discoveries of the decade.';
   updateUlineAnswersList();
 }
 
-/* ═══════════ START ═══════════ */
+/* ═══════ START ═══════ */
 initDemo();
 </script>
 </body>
