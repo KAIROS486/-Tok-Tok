@@ -132,44 +132,6 @@ textarea:focus { outline: none; border-color: var(--accent); background: var(--s
 .btn-secondary:hover { background: var(--surface2); }
 .btn-danger { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
 
-/* ── FILE UPLOAD ZONE ── */
-.upload-zone {
-  border: 2px dashed var(--border); border-radius: var(--radius);
-  padding: 20px; text-align: center; cursor: pointer; transition: all 0.15s;
-  background: var(--surface2); margin-bottom: 14px; position: relative;
-}
-.upload-zone:hover, .upload-zone.drag-over { border-color: var(--accent); background: var(--blue-bg); }
-.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.upload-icon { font-size: 28px; margin-bottom: 6px; }
-.upload-text { font-size: 13px; color: var(--text2); line-height: 1.6; }
-.upload-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
-
-.upload-methods { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.method-btn {
-  display: flex; flex-direction: column; align-items: center; gap: 5px;
-  padding: 12px 8px; border-radius: 8px; border: 1px solid var(--border);
-  background: var(--surface2); cursor: pointer; transition: all 0.13s;
-  font-size: 12px; color: var(--text2); font-weight: 600; font-family: inherit;
-}
-.method-btn:hover { background: var(--blue-bg); border-color: var(--blue-border); color: var(--blue-text); }
-.method-btn.active-method { background: var(--blue-bg); border-color: var(--blue-border); color: var(--blue-text); }
-.method-icon { font-size: 22px; }
-
-/* ── CAMERA ── */
-#camera-wrap { display: none; margin-bottom: 14px; }
-#camera-preview { width: 100%; border-radius: 8px; background: #000; max-height: 260px; object-fit: cover; }
-.camera-controls { display: flex; gap: 8px; margin-top: 8px; }
-
-/* ── IMAGE PREVIEW ── */
-.img-preview-wrap { margin-bottom: 12px; display: none; }
-.img-preview-wrap img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
-.img-preview-label { font-size: 12px; color: var(--text3); margin-bottom: 6px; }
-
-/* ── AI PROCESSING ── */
-.ai-status { display: none; align-items: center; gap: 10px; padding: 10px 14px; background: var(--blue-bg); border: 1px solid var(--blue-border); border-radius: 8px; margin-bottom: 12px; font-size: 13px; color: var(--blue-text); }
-.spinner { width: 16px; height: 16px; border: 2px solid var(--blue-border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
 .type-toggle { display: flex; gap: 8px; margin-bottom: 14px; }
 .type-btn { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; background: transparent; color: var(--text2); transition: all 0.13s; text-align: center; }
 .type-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
@@ -181,9 +143,9 @@ textarea:focus { outline: none; border-color: var(--accent); background: var(--s
 
 /* ── PRINT / PDF STYLES ── */
 @media print {
-  header, .btn-row, .upload-methods, .upload-zone, .ai-status,
+  header, .btn-row,
   .dl-btn, .dl-all-btn, .nav-grid, .progress-wrap, .type-toggle,
-  #camera-wrap, .hint-box { display: none !important; }
+  .hint-box { display: none !important; }
   body { background: #fff; font-size: 13px; }
   .container { grid-template-columns: 1fr; padding: 0; gap: 12px; }
   .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
@@ -253,77 +215,18 @@ textarea:focus { outline: none; border-color: var(--accent); background: var(--s
         <button class="type-btn" id="type-uline" onclick="setType('uline')">밑줄 어법</button>
       </div>
 
-      <!-- 입력 방법 선택 -->
-      <div class="input-label">입력 방법</div>
-      <div class="upload-methods">
-        <button class="method-btn active-method" id="method-text" onclick="setMethod('text')">
-          <span class="method-icon">⌨️</span>직접 입력
-        </button>
-        <button class="method-btn" id="method-image" onclick="setMethod('image')">
-          <span class="method-icon">🖼️</span>사진/PDF
-        </button>
-        <button class="method-btn" id="method-camera" onclick="setMethod('camera')">
-          <span class="method-icon">📷</span>카메라
-        </button>
-      </div>
-
       <!-- 직접 입력 -->
-      <div id="section-text">
-        <div id="hint-bracket" class="hint-box">
-          괄호 선택지를 <code>(A / B)</code> 형식으로 입력하세요.<br>
-          예: <code>She (was / were) happy that he (what / that) said.</code>
-        </div>
-        <div id="hint-uline" class="hint-box" style="display:none;">
-          밑줄 칠 부분을 <code>[단어/구]</code>로 표시하세요.<br>
-          예: <code>She [was] happy. He [quick] solved the problem.</code>
-        </div>
-        <div class="input-section">
-          <div class="input-label">지문</div>
-          <textarea id="input-text" placeholder="지문을 여기에 입력하세요..."></textarea>
-        </div>
+      <div id="hint-bracket" class="hint-box">
+        괄호 선택지를 <code>(A / B)</code> 형식으로 입력하세요.<br>
+        예: <code>She (was / were) happy that he (what / that) said.</code>
       </div>
-
-      <!-- 사진/PDF 업로드 -->
-      <div id="section-image" style="display:none;">
-        <div class="upload-zone" id="drop-zone">
-          <input type="file" id="file-input" accept="image/*,application/pdf" onchange="handleFile(this.files[0])">
-          <div class="upload-icon">📄</div>
-          <div class="upload-text">사진 또는 PDF를 드래그하거나 클릭해서 업로드</div>
-          <div class="upload-sub">JPG · PNG · PDF 지원</div>
-        </div>
-        <div class="img-preview-wrap" id="img-preview-wrap">
-          <div class="img-preview-label">업로드된 이미지</div>
-          <img id="img-preview" src="" alt="preview">
-        </div>
-        <div class="ai-status" id="ai-status-img">
-          <div class="spinner"></div><span id="ai-status-img-text">AI가 지문을 인식하고 있습니다...</span>
-        </div>
-        <div class="input-section" id="ocr-result-section" style="display:none;">
-          <div class="input-label">인식된 지문 (수정 가능)</div>
-          <textarea id="ocr-text" style="min-height:160px;" placeholder="AI가 인식한 텍스트가 여기에 표시됩니다..."></textarea>
-        </div>
+      <div id="hint-uline" class="hint-box" style="display:none;">
+        밑줄 칠 부분을 <code>[단어/구]</code>로 표시하세요.<br>
+        예: <code>She [was] happy. He [quick] solved the problem.</code>
       </div>
-
-      <!-- 카메라 -->
-      <div id="section-camera" style="display:none;">
-        <div id="camera-wrap" style="display:block;">
-          <video id="camera-preview" autoplay playsinline></video>
-          <div class="camera-controls">
-            <button class="btn btn-primary" onclick="capturePhoto()">📸 촬영</button>
-            <button class="btn btn-secondary" onclick="stopCamera()">✕ 닫기</button>
-          </div>
-        </div>
-        <div class="img-preview-wrap" id="camera-preview-wrap">
-          <div class="img-preview-label">촬영된 이미지</div>
-          <img id="camera-captured" src="" alt="captured">
-        </div>
-        <div class="ai-status" id="ai-status-cam">
-          <div class="spinner"></div><span>AI가 지문을 인식하고 있습니다...</span>
-        </div>
-        <div class="input-section" id="camera-ocr-section" style="display:none;">
-          <div class="input-label">인식된 지문 (수정 가능)</div>
-          <textarea id="camera-ocr-text" style="min-height:160px;"></textarea>
-        </div>
+      <div class="input-section">
+        <div class="input-label">지문</div>
+        <textarea id="input-text" placeholder="지문을 여기에 입력하세요..."></textarea>
       </div>
 
       <!-- 밑줄 정오 -->
@@ -362,9 +265,6 @@ textarea:focus { outline: none; border-color: var(--accent); background: var(--s
   </div>
 </div>
 </div>
-
-<!-- ══════════════ CANVAS (카메라 캡처용) ══════════════ -->
-<canvas id="capture-canvas" style="display:none;"></canvas>
 
 <script>
 /* ═══════════ DEMO DATA ═══════════ */
@@ -487,8 +387,7 @@ const demoPassageRaw = [
 /* ═══════════ STATE ═══════════ */
 let demoSeen = new Set(), demoCurrent = null;
 let inputItems = [], inputSeen = new Set(), inputCurrent = null;
-let inputType = 'bracket', inputMethod = 'text';
-let cameraStream = null;
+let inputType = 'bracket';
 
 /* ═══════════ INIT DEMO ═══════════ */
 function initDemo() {
@@ -648,171 +547,9 @@ function setType(t) {
   if (t==='uline') updateUlineAnswersList();
 }
 
-function setMethod(m) {
-  inputMethod = m;
-  ['text','image','camera'].forEach(id => {
-    document.getElementById('method-'+id).classList.toggle('active-method', id===m);
-    document.getElementById('section-'+id).style.display = id===m ? '' : 'none';
-  });
-  if (m==='camera') startCamera();
-  else stopCamera();
-}
-
-/* ═══════════ CAMERA ═══════════ */
-async function startCamera() {
-  try {
-    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-    document.getElementById('camera-preview').srcObject = cameraStream;
-    document.getElementById('camera-wrap').style.display = 'block';
-  } catch(e) {
-    alert('카메라 접근 권한이 필요합니다: ' + e.message);
-  }
-}
-
-function stopCamera() {
-  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
-}
-
-function capturePhoto() {
-  const video = document.getElementById('camera-preview');
-  const canvas = document.getElementById('capture-canvas');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
-  const dataURL = canvas.toDataURL('image/jpeg', 0.92);
-  document.getElementById('camera-captured').src = dataURL;
-  document.getElementById('camera-preview-wrap').style.display = 'block';
-  stopCamera();
-  document.getElementById('camera-wrap').style.display = 'none';
-  processImageWithAI(dataURL, 'camera');
-}
-
-/* ═══════════ FILE UPLOAD ═══════════ */
-const dropZone = document.getElementById('drop-zone');
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-dropZone.addEventListener('drop', e => {
-  e.preventDefault(); dropZone.classList.remove('drag-over');
-  const f = e.dataTransfer.files[0];
-  if (f) handleFile(f);
-});
-
-function handleFile(file) {
-  if (!file) return;
-  if (file.type === 'application/pdf') {
-    readPDFAsImage(file);
-  } else if (file.type.startsWith('image/')) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const dataURL = e.target.result;
-      document.getElementById('img-preview').src = dataURL;
-      document.getElementById('img-preview-wrap').style.display = 'block';
-      processImageWithAI(dataURL, 'image');
-    };
-    reader.readAsDataURL(file);
-  } else {
-    alert('이미지 또는 PDF 파일을 업로드해주세요.');
-  }
-}
-
-function readPDFAsImage(file) {
-  const reader = new FileReader();
-  reader.onload = async e => {
-    try {
-      const pdfjsLib = window['pdfjs-dist/build/pdf'];
-      if (!pdfjsLib) {
-        // PDF.js 없으면 base64로 직접 전송
-        const base64 = e.target.result.split(',')[1];
-        const dataURL = e.target.result;
-        document.getElementById('img-preview').src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60"><rect width="200" height="60" fill="%23e4eef8"/><text x="100" y="35" font-size="14" text-anchor="middle" fill="%230c4070">PDF 업로드됨</text></svg>';
-        document.getElementById('img-preview-wrap').style.display = 'block';
-        processImageWithAI(dataURL, 'image');
-        return;
-      }
-    } catch(err) {}
-
-    // PDF를 canvas로 렌더링
-    try {
-      const typedArray = new Uint8Array(e.target.result);
-      const loadingTask = pdfjsLib.getDocument(typedArray);
-      const pdf = await loadingTask.promise;
-      const page = await pdf.getPage(1);
-      const viewport = page.getViewport({ scale: 2 });
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
-      const dataURL = canvas.toDataURL('image/jpeg', 0.92);
-      document.getElementById('img-preview').src = dataURL;
-      document.getElementById('img-preview-wrap').style.display = 'block';
-      processImageWithAI(dataURL, 'image');
-    } catch(err) {
-      alert('PDF 처리 중 오류: ' + err.message);
-    }
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-/* ═══════════ AI OCR (Claude API) ═══════════ */
-async function processImageWithAI(dataURL, ctx) {
-  const statusId = ctx==='camera' ? 'ai-status-cam' : 'ai-status-img';
-  const resultSectionId = ctx==='camera' ? 'camera-ocr-section' : 'ocr-result-section';
-  const resultTextId = ctx==='camera' ? 'camera-ocr-text' : 'ocr-text';
-
-  document.getElementById(statusId).style.display = 'flex';
-  document.getElementById(resultSectionId).style.display = 'none';
-
-  try {
-    const base64 = dataURL.split(',')[1];
-    const mimeMatch = dataURL.match(/^data:([^;]+);/);
-    const mediaType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
-        system: `당신은 영어 시험지 OCR 전문가입니다.
-이미지에서 영어 지문을 추출하되, 다음 규칙을 따르세요:
-1. 괄호 어법 선택지는 반드시 (A / B) 형식으로 출력
-2. 밑줄 어법 항목은 [단어/구] 형식으로 표시
-3. 문장 부호, 대소문자 정확히 유지
-4. 지문 텍스트만 출력 (번호, 지시문 제외)
-5. 일반 괄호 안의 내용이 슬래시로 구분되면 어법 선택지로 처리`,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-            { type: 'text', text: '이 이미지에서 영어 지문을 추출해주세요. 괄호 어법은 (A / B) 형식, 밑줄 어법은 [단어] 형식으로 출력하세요. 지문 텍스트만 출력하세요.' }
-          ]
-        }]
-      })
-    });
-
-    const data = await response.json();
-    const text = data.content?.[0]?.text || '';
-
-    document.getElementById(statusId).style.display = 'none';
-    document.getElementById(resultTextId).value = text;
-    document.getElementById(resultSectionId).style.display = 'block';
-
-    // 직접 입력 textarea에도 복사
-    document.getElementById('input-text').value = text;
-
-  } catch(err) {
-    document.getElementById(statusId).style.display = 'none';
-    document.getElementById(resultSectionId).style.display = 'block';
-    document.getElementById(resultTextId).value = '';
-    document.getElementById(resultTextId).placeholder = 'AI 인식 중 오류가 발생했습니다. 텍스트를 직접 입력해주세요.\n오류: ' + err.message;
-  }
-}
-
 /* ═══════════ ULINE ANSWERS LIST ═══════════ */
 function updateUlineAnswersList() {
-  const text = (inputMethod==='text'
-    ? document.getElementById('input-text').value
-    : (document.getElementById('ocr-text').value || document.getElementById('camera-ocr-text').value || ''));
+  const text = document.getElementById('input-text').value;
   const matches = [...text.matchAll(/\[([^\]]+)\]/g)];
   const list = document.getElementById('uline-answers-list');
   list.innerHTML = matches.map((m, i) => `
@@ -829,16 +566,9 @@ document.getElementById('input-text').addEventListener('input', () => {
 });
 
 /* ═══════════ GENERATE ═══════════ */
-function getActiveText() {
-  if (inputMethod==='text') return document.getElementById('input-text').value.trim();
-  if (inputMethod==='image') return (document.getElementById('ocr-text').value || document.getElementById('input-text').value).trim();
-  if (inputMethod==='camera') return (document.getElementById('camera-ocr-text').value || document.getElementById('input-text').value).trim();
-  return '';
-}
-
 function generateFromInput() {
-  const text = getActiveText();
-  if (!text) { alert('지문을 입력하거나 이미지를 업로드해주세요.'); return; }
+  const text = document.getElementById('input-text').value.trim();
+  if (!text) { alert('지문을 입력해주세요.'); return; }
   if (inputType==='bracket') generateBracket(text);
   else generateUline(text);
 }
@@ -941,13 +671,13 @@ function inputShow(id) {
 
 /* ═══════════ SAMPLES ═══════════ */
 function loadSampleBracket() {
-  setType('bracket'); setMethod('text');
+  setType('bracket');
   document.getElementById('input-text').value =
     'She (was / were) the only student who (have / had) finished the assignment, and the teacher (recognizing / recognized) her effort. It is important (for / of) students to (reviewing / review) their notes regularly.';
 }
 
 function loadSampleUline() {
-  setType('uline'); setMethod('text');
+  setType('uline');
   document.getElementById('input-text').value =
     'The scientist [discovered] a new species that [have] never been seen before. The findings were [published] in a major journal, [making] it one of the most significant discoveries of the decade.';
   updateUlineAnswersList();
@@ -955,14 +685,6 @@ function loadSampleUline() {
 
 /* ═══════════ START ═══════════ */
 initDemo();
-
-// PDF.js 로드 시도 (선택)
-(function() {
-  const s = document.createElement('script');
-  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-  s.onload = () => { if (window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; };
-  document.head.appendChild(s);
-})();
 </script>
 </body>
 </html>
