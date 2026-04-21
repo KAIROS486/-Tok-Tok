@@ -169,7 +169,7 @@ textarea:focus{outline:none;border-color:var(--accent);background:var(--surface)
       </div>
 
       <!-- API 키 -->
-      <div class="input-label">Claude API 키 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--text3);">(해설 자동 생성용 — 브라우저에만 저장)</span></div>
+      <div class="input-label">Claude API 키 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--text3);">(입력 후 저장 → 괄호 클릭 시 AI 해설 자동 생성)</span></div>
       <div style="display:flex;gap:8px;margin-bottom:10px;">
         <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." style="flex:1;height:38px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13px;font-family:monospace;background:var(--surface2);color:var(--text);outline:none;">
         <button class="btn btn-secondary" onclick="saveApiKey()" style="height:38px;white-space:nowrap;padding:0 14px;">저장</button>
@@ -786,14 +786,20 @@ async function fetchExplanation(panelEl, item, num, ctx){
 
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 600,
-        system: `당신은 한국 수능 영어 전문 선생님입니다. 어법 문제 해설을 정확하고 간결하게 작성합니다.
-반드시 아래 JSON 형식만 출력하세요 (다른 텍스트 없이):
-{"reason":"정답 선택 이유 (2-3문장, 핵심 문법 규칙+이 문장 적용 이유)","wrongReason":"오답 분석 (1-2문장, 오답이 틀린 정확한 이유)","rule":"핵심 규칙 (수능 출제 포인트 한 문장)"}
-HTML 태그 사용 가능: <b>, <span class='tag-ok'>, <span class='tag-no'>, <span class='tag-rule'>`,
+        max_tokens: 800,
+        system: `당신은 한국 수능 영어 어법 전문 선생님입니다.
+아래 JSON 형식만 출력하세요. 다른 텍스트, 마크다운 없이 JSON만:
+{"reason":"...","wrongReason":"...","rule":"..."}
+
+각 필드 작성 기준:
+- reason: 정답이 맞는 문법적 이유 2~3문장. 구체적 문법 규칙명 포함. 예) '이 절은 주어+동사가 완전하므로 명사절 접속사 that이 필요합니다.'
+- wrongReason: 오답이 틀린 정확한 이유 1~2문장. 예) 'what은 불완전한 절을 이끌어야 하는데 이 절은 완전합니다.'
+- rule: 수능에서 자주 출제되는 핵심 포인트 한 문장. 예) 'that절=완전절 / what절=불완전절'
+
+HTML 태그 허용: <b>강조</b>, 정답표시:<span class='tag-ok'>단어</span>, 오답표시:<span class='tag-no'>단어</span>, 규칙:<span class='tag-rule'>내용</span>`,
         messages: [{ role: 'user', content: prompt }]
       })
     });
